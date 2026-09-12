@@ -1,0 +1,14 @@
+{
+  "record_kind": "UNPOPULATED_TEMPLATE",
+  "study_id": null,
+  "evaluation_id": null,
+  "person_id": null,
+  "role": null,
+  "activity": null,
+  "minutes": null,
+  "success_or_failure": null,
+  "shared_or_incremental": null,
+  "comparison_arm": null,
+  "artifact_created": null,
+  "notes": null
+}
