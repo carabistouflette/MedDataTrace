@@ -1,0 +1,631 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=21mm,top=23mm,bottom=23mm,headheight=15pt]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.035}
+\usepackage[table]{xcolor}
+\definecolor{Ink}{HTML}{17334A}
+\definecolor{Accent}{HTML}{237A80}
+\definecolor{Muted}{HTML}{596975}
+\definecolor{Pale}{HTML}{F1F5F7}
+\definecolor{Line}{HTML}{D6E1E7}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.4em,topsep=4pt}
+\usepackage{titlesec}
+\titleformat{\section}{\Large\sffamily\bfseries\color{Ink}}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{Ink}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{Ink}}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{17pt}{9pt}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+\titlespacing*{\subsubsection}{0pt}{9pt}{4pt}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{Muted}MedDataTrace / Research and Project Specification}
+\fancyhead[R]{\small\sffamily\color{Muted}Working specification}
+\fancyfoot[L]{\footnotesize\sffamily\color{Muted}12 September 2026}
+\fancyfoot[R]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\usepackage[most]{tcolorbox}
+\newtcolorbox{decisionbox}[1][]{enhanced,breakable,colback=Pale,colframe=Line,boxrule=0.5pt,arc=1mm,left=3mm,right=3mm,top=2.5mm,bottom=2.5mm,fonttitle=\sffamily\bfseries,coltitle=Ink,colbacktitle=Pale,#1}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
+\tikzset{block/.style={draw=Line,fill=Pale,rounded corners=2pt,align=center,inner sep=6pt,font=\small\sffamily,text=Ink}, flow/.style={-{Latex[length=2mm]},draw=Accent,line width=0.8pt}, optional/.style={flow,dashed}}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,showstringspaces=false,frame=single,rulecolor=\color{Line},backgroundcolor=\color{Pale},aboveskip=8pt,belowskip=8pt,xleftmargin=4pt,xrightmargin=4pt,framesep=5pt}
+\usepackage{caption}
+\captionsetup{font=small,labelfont={bf,sf},skip=7pt}
+\usepackage{float}
+\usepackage{needspace}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=4,giveninits=true,url=true,doi=true,isbn=false]{biblatex}
+\addbibresource{references.bib}
+\setlength{\bibitemsep}{5pt}
+\AtEveryBibitem{\iffieldundef{doi}{}{\clearfield{url}\clearfield{urlyear}\clearfield{urlmonth}\clearfield{urlday}}}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=Ink,citecolor=Accent,urlcolor=Accent,pdftitle={MedDataTrace: Research and Project Specification},pdfauthor={MedDataTrace Project},pdfsubject={Evidence-qualified assessment of dataset issues in medical-imaging evaluations}}
+\usepackage{bookmark}
+\setcounter{tocdepth}{1}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.16}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\status}[1]{\textsf{\small #1}}
+\newcommand{\req}[1]{\textsf{\bfseries #1}}
+\newcommand{\newsection}[1]{\Needspace{9\baselineskip}\section{#1}}
+\emergencystretch=2em
+\widowpenalty=10000
+\clubpenalty=10000
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+{\sffamily\color{Accent}\bfseries RESEARCH AND PROJECT SPECIFICATION\par}
+\vspace{17mm}
+{\sffamily\bfseries\fontsize{36}{40}\selectfont\color{Ink}MedDataTrace\par}
+\vspace{5mm}
+{\sffamily\fontsize{19}{24}\selectfont\color{Ink}Evidence-qualified review of dataset issues\par in medical-imaging evaluations\par}
+\vspace{12mm}
+\begin{decisionbox}
+\textbf{Central research question}\par
+At comparable evidence access and explicitly measured review effort, can experiment-specific applicability assessment improve review decisions over a competent reviewer using a curated issue registry and a structured checklist?
+\end{decisionbox}
+\vspace{7mm}
+\begin{tabularx}{\linewidth}{@{}L{37mm}Y@{}}
+\textcolor{Muted}{Document status} & Single authoritative working specification\\
+\textcolor{Muted}{Date} & 12 September 2026\\
+\textcolor{Muted}{Starting domain} & HAM10000 / DermaMNIST dermatology image benchmarks\\
+\textcolor{Muted}{Primary scientific output} & Evidence-qualified assessment method, independently annotated cases, and comparative evaluation\\
+\textcolor{Muted}{Primary engineering output} & Auditable evidence records, deterministic assessment kernel, and optional graph projection\\
+\end{tabularx}
+\vfill
+{\small\color{Muted}This document specifies work that is not yet empirically validated. No claim is made that MedDataTrace is already more accurate, more efficient, or more useful than a competent manual review workflow. The first milestone is a bounded feasibility study using real public evidence.\par}
+\vspace{5mm}
+{\color{Accent}\rule{\linewidth}{1.2pt}}
+\end{titlepage}
+
+\pagenumbering{roman}
+\section*{Executive summary}
+\addcontentsline{toc}{section}{Executive summary}
+Medical-AI papers often depend on public datasets whose releases, partitions, labels, or documentation later receive corrections or issue reports. A dataset-level warning does not establish that a particular experiment is affected: the experiment may use a corrected release, a custom partition, an unrelated component, or only cite the dataset. Conversely, a renamed or derived artifact can preserve a relevant issue even when the dataset name changes.
+
+\textbf{MedDataTrace is designed to assess that experiment-specific question.} For a named dataset issue and a named evaluation, it reconstructs documented data use, aligns the evidence to the issue's scope, represents corrections and contradictory evidence, and returns a scoped conclusion such as \status{APPLIES}, \status{NOT\_APPLICABLE}, \status{UNKNOWN}, or \status{CONFLICTING}. The output must state what proposition was assessed, what evidence supports it, what remains unresolved, and what a reviewer should do next.
+
+The scientific contribution under investigation is not a new graph database, ontology, LLM pipeline, or generic issue-status pattern. Close work already covers dataset tracking, living reviews, structured medical-AI metadata, lineage reconstruction, and cross-domain applicability statements \cite{inthepicture2025,sourget2024,atlas,tracing2026,openvex}. The credible contribution prospect is a source-grounded method and benchmark for deciding whether a documented dataset issue applies to a specific medical-imaging evaluation under incomplete, versioned, and sometimes conflicting evidence.
+
+The project begins with one concrete historical issue in the DermaMNIST/HAM10000 family. A six-study micro-pilot measures evidence recoverability, independent annotation feasibility, and real effort. A broader platform, GraphRAG, and model fine-tuning are conditional on evidence that the task is both recoverable and useful. A simpler curated registry is an acceptable outcome if it supports the same decisions with less maintenance.
+
+\begin{decisionbox}[title=Current commitment]
+Build and evaluate the evidence-assessment task before building a platform. The project can succeed as a bounded benchmark and assessment method even if no hosted graph application or GraphRAG interface is ultimately justified.
+\end{decisionbox}
+
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\section{Project definition}
+\label{sec:project}
+\subsection{Problem statement}
+A paper can cite a dataset without using it experimentally. An experiment can use a renamed derivative, a corrected release, a custom split, or only an associated annotation tool. A later issue report may concern only one component or one historical partition. Dataset tracking in medical imaging is already complicated by inconsistent citation and naming practices \cite{sourget2024,copycats}.
+
+The project addresses the resulting \emph{review task}. It does not assume that every dependency is problematic or that every documented problem propagates unchanged. Its core output is a qualified relation between a specific evaluation and a documented issue, supported by inspectable evidence.
+
+\subsection{Overall goal}
+\textbf{Overall goal:} reduce the effort and error involved in deciding which documented data-related findings warrant qualification, rechecking, or no action for a specific medical-AI evaluation, without turning missing information into unsupported warnings or reassurance.
+
+\begin{tabularx}{\linewidth}{@{}L{13mm}Y Y@{}}
+\toprule
+\textbf{ID} & \textbf{Objective} & \textbf{Observable result}\\ \midrule
+O1 & Recover experiment-specific data dependencies. & Reviewed records distinguish dataset family, release, split, component, and usage role.\\
+O2 & Assess issue applicability with explicit scope and uncertainty. & Every assessment identifies proposition, claim target, evidence basis, and unresolved questions.\\
+O3 & Preserve scientific boundaries. & Dependency, applicability, measured effect, and clinical consequence are never collapsed.\\
+O4 & Establish a reproducible research contribution. & Independently annotated cases, strong baselines, held-out evaluation, and error analysis.\\
+O5 & Test practical value before expansion. & Decision quality and effort are measured against a competent registry/checklist workflow.\\
+O6 & Retain graph/ML relevance without making them the novelty claim. & Graph and extraction components are evaluated only where they add measurable value.\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Primary user and decision}
+The first target user is a researcher reviewing an existing medical-imaging evaluation. The primary decision is whether a named, documented dataset concern warrants a scoped qualification or recheck, whether a specific missing artifact should be requested, or whether no action is justified \emph{for that concern}. Benchmark maintainers and experiment designers are secondary users.
+
+Direct clinical use, patient advice, model certification, misconduct allegations, and universal model-trust scores are outside scope. MedMNIST itself states that its benchmark is not intended for clinical use \cite{medmnist}. The intended benefit is better research review, not demonstrated patient benefit.
+
+\subsection{Four levels that must remain separate}
+\begin{tabularx}{\linewidth}{@{}L{32mm}Y L{30mm}@{}}
+\toprule
+\textbf{Level} & \textbf{Meaning} & \textbf{Project position}\\ \midrule
+Documented dependency & An evaluation or linked development run consumed an identified data component. & In scope.\\
+Issue applicability & The consumed component and setup satisfy the documented issue's conditions. & In scope, with abstention.\\
+Measured effect & The issue changed a metric, ranking, or model behavior. & Out of scope without separate empirical reanalysis.\\
+Clinical consequence & The issue changed real-world decisions or outcomes. & Out of scope.\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Primary hypothesis}
+\textbf{H1 -- decision value.} At comparable evidence access and explicitly measured review effort, experiment-specific applicability assessment improves the correctness--effort trade-off for review decisions relative to a searchable curated registry plus a competent structured checklist.
+
+This is a hypothesis to test, not a promise. The first study is descriptive. A later confirmatory study would require effect sizes, sample-size justification, and a prespecified practical margin informed by pilot results.
+
+\section{Contribution and prior-art position}
+\label{sec:prior}
+\subsection{What is not claimed as novel}
+The project does not claim novelty for: tracking datasets used in papers; a knowledge graph of papers, models, and datasets; LLM extraction of structured metadata; dataset lineage reconstruction; generic issue propagation; a status vocabulary; or GraphRAG over medical literature. Relevant prior work already covers substantial parts of that space \cite{inthepicture2025,sourget2024,atlas,tracing2026,copycats,openvex}.
+
+\subsection{Contribution hypothesis}
+The strongest originality prospect is:
+
+\begin{decisionbox}
+\textbf{An evidence-qualified method and benchmark for assessing whether a documented dataset issue applies to a specific medical-imaging evaluation, with explicit treatment of release/split scope, corrections, contradictory evidence, identity limitations, and missing information.}
+\end{decisionbox}
+
+A claim of methodological advantage requires evidence that the proposed assessment improves decisions, evidence fidelity, or effort relative to strong alternatives. A benchmark or empirical case-study contribution does not require the method to win; it requires new, reliable, reusable knowledge about which distinctions matter, which documentation gaps block assessment, and what resolving them costs. A null comparative result is informative only when it is produced by a rigorous, reusable study rather than by implementation failure.
+
+\subsection{Capability comparison obligations}
+\begin{tabularx}{\linewidth}{@{}L{35mm}Y Y@{}}
+\toprule
+\textbf{Prior work} & \textbf{Capability already established} & \textbf{Implication for MedDataTrace}\\ \midrule
+In the Picture \cite{inthepicture2025} & Dataset uses, artifacts, living review, citation functions. & A dataset--paper--issue catalog is not enough.\\
+{[Citation needed]} \cite{sourget2024} & Medical-dataset tracking using citation and full-text signals. & Dataset-mention/use extraction alone is not novel.\\
+RSNA ATLAS \cite{atlas} & Structured model/dataset cards, schemas, expert review. & Structured metadata is supporting infrastructure.\\
+Tracing the Roots \cite{tracing2026} & Dataset lineage reconstruction and contamination-related propagation. & Ancestry plus propagation is not sufficient novelty.\\
+OpenVEX \cite{openvex} & Product-specific issue applicability statuses and justifications. & Dependency-specific applicability is an established general pattern.\\
+Copycats \cite{copycats} & Copies, identifiers, documentation, and maintenance problems in medical imaging data. & Medical dataset identity/provenance problems are established.\\
+\bottomrule
+\end{tabularx}
+
+For shared contrast cases, record whether a competitor was actually run, what evidence it received, manual additions, unsupported inputs, and output. Unknown capabilities remain \status{NOT ESTABLISHED}; they are not silently counted as absent.
+
+\section{Pilot domain, public data, and sampling}
+\label{sec:data}
+\subsection{Initial domain}
+The first family is HAM10000 / DermaMNIST. A 2025 investigation reports historical DermaMNIST partition overlap, additional duplicate-identity problems, and corrected artifacts \cite{abhishek2025,zenodo}. This provides a real issue anchor. It does \emph{not} establish that downstream papers disclose enough information to determine applicability.
+
+The pilot is intentionally narrow. Generalization beyond this family requires additional independently documented issue mechanisms or dataset families.
+
+\subsection{Public data sources}
+\begin{tabularx}{\linewidth}{@{}L{38mm}Y Y@{}}
+\toprule
+\textbf{Source type} & \textbf{Use} & \textbf{Constraint}\\ \midrule
+Peer-reviewed/open literature & Methods, data-use statements, corrections, reported evaluation setup. & Redistribution and text-mining rights remain source-specific.\\
+PMC Open Access Subset \cite{pmcoa} & Reusable full text for eligible articles. & Accessibility does not imply identical reuse rights; use supported retrieval services.\\
+Dataset documentation / archives & Release identity, partitions, corrections, metadata, provenance. & A public page is not proof that all underlying data can be redistributed.\\
+Project-created annotations & Reviewed facts, issue contracts, evidence locators, reference judgments. & Must preserve source licenses and avoid redistributing restricted material.\\
+\bottomrule
+\end{tabularx}
+
+No patient-level graph is required. Raw patient images or restricted clinical data are not a project dependency.
+
+\subsection{Naturalistic and enriched collections}
+\textbf{Naturalistic collection.} Freeze discovery queries, aliases, dates, eligibility rules, and selection order before inspecting applicability. Retain inaccessible, unresolved, and unparseable cases in the appropriate denominators. This estimates recoverability within the declared frame.
+
+\textbf{Enriched challenge collection.} Deliberately seek corrections, conflicts, mixed inputs, transformed artifacts, and identity limitations. This tests reasoning coverage and cannot estimate real-world prevalence.
+
+Synthetic fixtures are a third collection used only for conformance testing.
+
+\subsection{Required denominators}
+\begin{tabularx}{\linewidth}{@{}L{31mm}Y@{}}
+\toprule
+\textbf{Population} & \textbf{Required accounting}\\ \midrule
+Discovered records & Deduplicated identifiers, search frame, query/date, and study grouping.\\
+Selected studies & All sampled studies, including unresolved eligibility and inaccessible sources.\\
+Accessible sources & Access and permitted-use state; parser success separately reported.\\
+Enumerated evaluations & Evaluations identified in accessible studies; inaccessible papers have unknown evaluation counts, not zero.\\
+Annotated cases & Evaluation--issue--scope cases, including UNKNOWN and CONFLICTING.\\
+Decisively assessable & Cases with sufficient evidence for a positive or negative conclusion at the named boundary.\\
+\bottomrule
+\end{tabularx}
+
+An unresolved version is not an exclusion when version resolution is part of the task.
+
+\section{Evidence model and assessment semantics}
+\label{sec:evidence}
+\subsection{Define the proposition first}
+Each assessment concerns a proposition
+\[
+Q(e,i,s,b,t):\quad \text{issue } i \text{ is present in evaluation } e
+\text{ within scope } s,\text{ boundary } b,\text{ snapshot } t.
+\]
+The issue definition names the affected component/version, grouping unit, relevant use relation, claim target, and sufficient evidence for presence or exclusion.
+
+\textbf{Claim target is mandatory.} Evidence may concern a \status{REPORTED SETUP}, a \status{DOCUMENTED PROCEDURE}, or an \status{EXECUTION-LINKED ARTIFACT}. These are not interchangeable. Static splitting code can support a procedure-level claim without proving which artifacts produced the reported result.
+
+\subsection{Evidence-state table}
+For an exactly scoped proposition $Q$, let $p$ mean admissible evidence supports $Q$ and $n$ mean admissible evidence supports its negation. Neither flag is created by model confidence or by failure to find contrary evidence.
+
+\begin{center}
+\begin{tabular}{@{}ccL{38mm}L{61mm}@{}}
+\toprule
+$p$ & $n$ & \textbf{State} & \textbf{Meaning}\\ \midrule
+0 & 0 & UNKNOWN & Neither conclusion is sufficiently supported.\\
+1 & 0 & APPLIES & Positive applicability evidence for this scope.\\
+0 & 1 & NOT\_APPLICABLE & Positive evidence excludes the issue for this scope.\\
+1 & 1 & CONFLICTING & Material evidence supports both positions for the same proposition.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{MITIGATED} is a reason for a supported negative result when a documented correction is shown to be implemented and sufficient for the named scope. It is not a separate truth value.
+
+\subsection{No negative-by-default rule}
+Absence of a sentence saying ``we corrected the split'' is not evidence that no correction occurred. Conversely, a precisely documented unchanged use can support a conclusion about the \emph{reported setup} without proving the absence of every undisclosed action. Conclusions must stay within their evidence target.
+
+\subsection{Completeness boundaries}
+An inventory can be based on documented inputs, an author-declared inventory, or an execution-linked manifest. A complete assessment of documented inputs does not establish that undisclosed inputs did not exist. A positive witness can support a localized warning even when other inputs remain unresolved; a whole-boundary negative result requires adequate coverage of all relevant scopes for that proposition.
+
+\subsection{Multi-scope composition contract}
+Assess the smallest meaningful scopes first, then summarize them using an ordered policy. The summary is a reporting rule over already scoped assessments; it does not strengthen their evidence.
+
+\begin{tabularx}{\linewidth}{@{}L{12mm}Y Y@{}}
+\toprule
+\textbf{Order} & \textbf{Condition} & \textbf{Evaluation-level summary and qualification}\\ \midrule
+1 & At least one conflict-free APPLIES scope. & APPLIES \emph{to the named positive scopes}; preserve every UNKNOWN/CONFLICTING scope and any incomplete inventory. Do not imply that all inputs are affected.\\
+2 & No conflict-free positive scope, but at least one CONFLICTING scope. & CONFLICTING; identify the scopes and the conclusion blocked by the conflict.\\
+3 & No positive/conflict; at least one UNKNOWN scope, incomplete inventory, or no assessed scopes without independent proof that the relevant inventory is empty. & UNKNOWN; identify unresolved scopes, missing coverage, and the bounded next check.\\
+4 & Every relevant scope has a supported negative result and coverage is complete relative to the named boundary. & NOT\_APPLICABLE within that boundary; preserve whether each negative arose from exclusion or a supported correction.\\
+\bottomrule
+\end{tabularx}
+
+A conflicted scope cannot serve as an unqualified positive witness. A clean positive on one input plus a conflict or unknown elsewhere yields a localized warning with residual uncertainty. A whole-boundary negative result requires complete coverage of the scopes relevant to that boundary, but it does \emph{not} reintroduce a requirement to reconstruct unrelated memberships: DM-H01 N1 remains satisfied by any supported evidence that blocks every frozen historical witness as specified in Section~\ref{sec:dmh01}.
+
+\subsection{Source facts versus reference judgments}
+The evaluated method may receive attributed source statements, literal version names, source-local roles, evidence locators, and a frozen issue definition. It must not receive accepted applicability certificates, final statuses, or reference actions.
+
+Cross-document identity resolution, alignment of a source-local artifact to the affected artifact, correction sufficiency, issue-specific scope reasoning, and final applicability remain tasks for the evaluated method in the reviewed-evidence track.
+
+\section{First issue-specific contract: DM-H01}
+\label{sec:dmh01}
+\subsection{Scientific proposition}
+The first issue contract concerns persistence of documented historical overlap witnesses. Let $W_0$ be a pinned set of historical oriented image-pair witnesses, each with partition identity, evidence, metadata version, and identity limitations. When the source relationship is symmetric (for example, two images documented as representing the same underlying lesion for purposes of the historical split concern), the registry stores \emph{both} orientations $(a,b)$ and $(b,a)$. It must not manufacture unreviewed transitive links. A deliberately directional issue would require a different issue contract.
+
+For a selected evaluation pair $s$, let $D_{e,s}$ and $T_{e,s}$ denote the final development and test memberships at the chosen claim target.
+
+\[
+Q_{H01}(e,s)\equiv \exists(x,y)\in W_0:\; x\in D_{e,s}\land y\in T_{e,s}.
+\]
+
+This proposition asks whether at least one \emph{documented historical witness} survives into the named development--test use pair. Storing both orientations prevents a symmetric witness from being treated as excluded merely because the two endpoints exchange development/test roles. The proposition does not mean ``all lesion leakage'', ``all train/test overlap'', or ``the model is invalid.''
+
+\subsection{Sufficient evidence routes}
+\begin{longtable}{@{}L{20mm}L{69mm}L{62mm}@{}}
+\toprule
+\textbf{Rule} & \textbf{Sufficient evidential basis} & \textbf{Important limit}\\ \midrule
+\endfirsthead
+\toprule\textbf{Rule} & \textbf{Sufficient evidential basis} & \textbf{Important limit}\\ \midrule\endhead
+P1: witness presence & An identified $W_0$ witness has supported membership on the development and test sides of the linked final use pair, matched to the evaluation and claim target. & Same dataset family, same split ratio, or ancestral use without final membership is insufficient.\\
+P2: reported inheritance & The paper explicitly reports unchanged use of exactly identified historical partitions, and the anchor evidence establishes a witness in that exact partition pair. & ``Official split'', an unspecified subset, or a citation alone is insufficient.\\
+N1: witness exclusion & For every oriented witness in frozen $W_0$, supported evidence establishes absence of at least one required membership under validated identity mapping and the named target. & Missing membership is not absence; checking only some witnesses cannot support exclusion.\\
+N2: correction & The assessed evaluation uses an exactly identified correction, and an independently checked postcondition establishes exclusion of $W_0$ for the relevant scope. & A correction's existence, citation, or ``cleaned'' wording alone is insufficient.\\
+\bottomrule
+\end{longtable}
+
+\subsection{N1 does not require unnecessary reconstruction}
+N1 requires complete \emph{witness coverage}, not necessarily complete reconstruction of every unrelated member of both input sets:
+\[
+\forall(x,y)\in W_0:\quad \operatorname{supported}(x\notin D_{e,s})\;\lor\;\operatorname{supported}(y\notin T_{e,s}).
+\]
+
+Complete development and test manifests are one sufficient route. A complete test manifest that excludes every relevant test-side witness endpoint can also suffice. Mixed per-witness exclusion evidence is permitted. Each absence must be supported under the named snapshot, target, and identity mapping; an incomplete manifest or unrecognized alias cannot establish absence.
+
+A negative DM-H01 result excludes only this frozen historical witness set. It does not establish general biological separation, patient separation, or lack of other overlap.
+
+\subsection{Conflict and identity handling}
+An assertion that all covered use pairs are non-overlapping must be compared with a supported witness in any contained pair when issue, target, snapshot, and identity basis align. Different scope identifiers do not prevent a contradiction when one proposition logically contains the other.
+
+Recorded identifiers are not automatically biological identity. The dermatology investigation reports missed duplicates assigned different lesion identifiers \cite{abhishek2025}. Therefore a non-overlap check on recorded lesion IDs supports only an identifier-level statement unless stronger identity evidence exists.
+
+\section{Benchmark construction and independent annotation}
+\label{sec:benchmark}
+\subsection{Reference layers}
+Store three layers independently:
+\begin{enumerate}
+\item source facts and evidence locators;
+\item reference interpretation of applicability/separation;
+\item acceptable next actions for the review task.
+\end{enumerate}
+An ambiguous fact may remain ambiguous. Do not force a decisive label to create class balance.
+
+\subsection{Independent annotation}
+Every final-test case is independently double-annotated without access to system predictions or the other reviewer's initial judgment. Preserve initial disagreements and adjudication reasons. A rule author must not be the sole reference assessor. If adequate independent review is unavailable, label the result as a developer-annotated pilot rather than a final benchmark.
+
+\subsection{Diversity and holdouts}
+Report studies, evaluation setups, issue mechanisms, corrections, dataset families, and reasoning patterns separately. Many cases derived from one historical issue do not constitute many independent issue mechanisms.
+
+Hold out all versions of a study together. Where real data permit, create compositional challenge cases involving transformation plus role, partial correction across multiple inputs, or contradictory evidence. Early feasibility cases used to refine rules are development material and cannot later be described as untouched tests.
+
+\section{Comparative evaluation}
+\label{sec:evaluation}
+\subsection{Three evaluation tracks}
+\textbf{R -- reviewed-evidence assessment.} All methods receive the same independently reviewed source facts and evidence bundle, issue definition, output schema, and abstention options, but not final labels. This tests assessment logic.
+
+\textbf{E -- automatic source-to-assessment.} Methods receive the same raw permitted evidence corpus and comparable retrieval/model budgets. Held-out extraction errors are not repaired with gold facts.
+
+\textbf{H -- human-reviewed workflow.} Measure the actual production and consumption process, including curation, correction, adjudication, maintenance, and reader verification. This is not automatic accuracy.
+
+A certificate-supplied composition condition may be used for conformance testing, but it cannot be presented as evidence that the method performed the substantive applicability judgment.
+
+\subsection{Strong comparators}
+\begin{tabularx}{\linewidth}{@{}L{39mm}Y@{}}
+\toprule
+\textbf{Comparator} & \textbf{Purpose}\\ \midrule
+Registry + checklist + competent reviewer & Principal practical baseline. Searchable, source-linked, and given the same evidence access.\\
+Direct LLM assessment & Same evidence bundle, issue definition, output schema, abstention options, and comparable budget; no explicit rule engine.\\
+Flat structured assessment & Scope-aware record/checklist without graph storage. Tests whether the graph representation is actually necessary.\\
+Alias/rule extraction & Low-cost extraction baseline for roles, releases, components, and corrections.\\
+Reachability-only warnings & Diagnostic ablation only; not the main novelty comparison.\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Scoring unit and duplicate normalization}
+The canonical technical atom is
+\[
+a=(e,i_{version},u_{dev},u_{test},target,snapshot).
+\]
+The practical unit is one review decision per evaluation. Multiple affected atoms cannot inflate evaluation-level practical credit.
+
+For scientific scoring, semantically identical repeated answers for the same atom are collapsed to one candidate answer and duplication is reported separately. Repetition never earns additional true positives. Incompatible answers for one atom remain invalid. Same-status outputs with materially different evidence, qualification, or action are not automatically merged; a frozen, reference-blind equivalence rule is required.
+
+Strict one-row output-contract compliance remains a separate engineering metric.
+
+\subsection{Primary action outcome}
+Independent reviewers predefine acceptable action--scope--rationale combinations. Action families include: qualify/recheck; request targeted evidence; take no action for DM-H01 while preserving broader uncertainty; or resolve conflict/defer.
+
+A technically correct narrow negative does not earn practical-value credit if its explanation falsely reassures the user about general separation or overall dataset quality.
+
+The micro-pilot's descriptive primary measure is the fraction of reference-scorable evaluations receiving an acceptable scoped action and rationale within a proposed 15-minute reader budget. Timeouts remain in the denominator; the pilot calibrates this budget rather than validating it.
+
+\subsection{Accuracy and uncertainty measures}
+For reference-applicable cases report warning precision and applicable-case recall. Abstention on an applicable case counts against recall. A decisive warning on a reference-UNKNOWN case is unsupported rather than proof of false biological reality.
+
+\begin{align*}
+\mathrm{Precision}_A &= \frac{\#\text{correct scoped warnings}}{\#\text{all scoped warnings}},\\
+\mathrm{Recall}_A &= \frac{\#\text{correct scoped warnings}}{\#\text{reference-applicable cases}}.
+\end{align*}
+
+Also report status confusion, false reassurance, mistaken mitigation/exclusion, scope correctness, conflict handling, actionable-UNKNOWN rate, missing-case rate, evidence fidelity, counts, and uncertainty. Small samples remain descriptive. Grouped studies and repeated issue instances must not be treated as independent Bernoulli trials merely to tighten intervals \cite{nistbinomial}.
+
+\section{Usefulness and cost}
+\label{sec:usefulness}
+\subsection{What usefulness means here}
+The project is useful only if it helps a reviewer make a better scoped decision, obtain the needed evidence more efficiently, avoid an unnecessary recheck, or avoid unsupported reassurance. A polished visualization or a technically correct status label is not sufficient evidence of usefulness.
+
+\subsection{UNKNOWN should be actionable}
+An UNKNOWN report names the missing artifact or fact, explains why it would resolve the proposition, records whether it was found in searched sources, gives a bounded next check, and provides a fallback when the artifact is unavailable. ``Inspect the manifest'' is not actionable if no manifest can be located.
+
+\subsection{Full effort accounting}
+Measure incremental cost against a maintained registry/checklist, not against zero curation. Keep one-time setup, shared issue work, per-assessment work, reader verification, corrections, and recurring maintenance separate by role.
+
+For a declared common cost unit and $r$ comparable reuses,
+\[
+\Delta C(r)=\Delta C_0+\Delta M+r\,\Delta c.
+\]
+A net saving requires $\Delta C(r)<0$ while preserving acceptable decision quality. Engineer-hours and domain-expert-hours remain separate unless an explicit conversion is justified.
+
+\subsection{Overreliance check}
+Use fictional or clearly simulated reports containing unsupported conclusions or incorrect scope to test whether users challenge them. Do not seed false public warnings about real researchers. Evidence links do not by themselves prove that users inspect evidence.
+
+\subsection{Reader-comparison safeguards}
+Timed comparisons must separate reference construction from reader evaluation. A reader must not evaluate a case whose reference answer they created or adjudicated. For a given case, use different readers for the registry/checklist and MedDataTrace-style conditions, counterbalance condition assignment across cases, and do not expose the same reader to the same case in both timed conditions. The evidence bundle, issue definition, task instructions, and time budget remain frozen across conditions.
+
+Reference annotators and supposedly naive timed readers are different roles. If suitable independent readers are unavailable, report descriptive case comparisons and preparation/verification costs only; do not claim a reader-efficiency advantage. Small reader comparisons remain feasibility evidence, not a powered effectiveness trial.
+
+\section{System architecture and graph model}
+\label{sec:architecture}
+\subsection{Architecture principle}
+The authoritative representation is a versioned evidence ledger. Graph storage is a rebuildable projection, not a second editable source of truth. The assessment kernel is storage-neutral and deterministic over accepted evidence records.
+
+\begin{center}
+\begin{tikzpicture}
+\node[block,text width=136mm] (sources) at (0,0) {Permitted sources + acquisition/rights manifest};
+\node[block,text width=136mm] (facts) at (0,-1.05) {Candidate extraction $\rightarrow$ validation/review $\rightarrow$ versioned evidence records};
+\node[block,text width=63mm] (rules) at (-3.6,-2.4) {Storage-neutral assessment kernel\\scope, evidence obligations, composition};
+\node[block,text width=63mm] (projection) at (3.6,-2.4) {Optional Neo4j projection\\lineage queries and navigation};
+\node[block,text width=136mm] (reports) at (0,-3.7) {Templated review reports + evidence + unresolved checks};
+\node[block,text width=136mm] (eval) at (0,-4.8) {Evaluation harness: registry/checklist, direct LLM, extraction baselines};
+\draw[flow] (sources)--(facts);
+\draw[flow] (facts.south -| rules.north)--(rules.north);
+\draw[optional] (facts.south -| projection.north)--(projection.north);
+\draw[flow] (rules.south)--(reports.north -| rules.south);
+\draw[optional] (projection.south)--(reports.north -| projection.south);
+\draw[flow] (reports)--(eval);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Core graph entities}
+\begin{longtable}{@{}L{38mm}L{113mm}@{}}
+\toprule
+\textbf{Entity} & \textbf{Meaning}\\ \midrule
+\endfirsthead
+\toprule\textbf{Entity} & \textbf{Meaning}\\ \midrule\endhead
+Study / Document & Publication grouping, document revision, identifiers, retrieval and rights metadata.\\
+Experiment / Evaluation & One model-task-evaluation configuration; distinct experiments in one paper remain distinct.\\
+DataUse & Qualified use with role, literal wording, component, split, release, and qualifiers.\\
+DatasetFamily / Release / Split & Family identity, exact artifact/release, and partition definition kept separate.\\
+DatasetComponent & Images, annotations, metadata, or split definitions that can have distinct provenance.\\
+Transformation & Typed operation linking input/output components, with scope and issue-specific preservation/removal evidence.\\
+SourceCohort / Institution & Aggregate provenance entities; no patient nodes are required.\\
+DatasetIssue & Versioned documented finding with mechanism, affected scope, source, and sufficient-evidence contract.\\
+Assertion / Evidence & Qualified claim plus source locator, polarity, review state, and temporal scope.\\
+Assessment / ReviewEvent & Versioned result, evidence path, rationale, human disagreement, and supersession history.\\
+\bottomrule
+\end{longtable}
+
+Consequential graph relationships should be justified by explicit assertion/evidence records. Direct traversal edges may be materialized for convenience but remain rebuildable from accepted assertions. Provenance concepts can be aligned with established provenance vocabularies such as PROV-O where useful \cite{provo}.
+
+\subsection{Why a graph is useful, but replaceable}
+The graph naturally represents recursive lineage, component-level derivation, experiment-specific roles, and downstream issue navigation. It is particularly useful for queries that follow multiple transformations and then return to experiments. However, recursive SQL or adjacency lists can represent the same facts. The project should demonstrate graph value through maintainability, query expressiveness, or workflow quality, not claim automatic accuracy gains from Neo4j.
+
+\subsection{ML responsibilities}
+ML is used for evidence-qualified information extraction: dataset-use detection, role classification, release/split resolution, component identification, correction linkage, and evidence retrieval. Start with rules/aliases, then constrained LLM extraction, then a supervised model only if the annotation volume and baseline gap justify it.
+
+GraphRAG is optional and explanation-only: it may answer ``why is this case flagged?'' by retrieving the accepted evidence path. It cannot create new scientific facts or override the deterministic assessment.
+
+\section{Functional and non-functional requirements}
+\label{sec:reqs}
+\subsection{Must requirements}
+\begin{longtable}{@{}L{14mm}L{137mm}@{}}
+\toprule
+\textbf{ID} & \textbf{Requirement}\\ \midrule
+\endfirsthead
+\toprule\textbf{ID} & \textbf{Requirement}\\ \midrule\endhead
+\req{R01} & Preserve all sampled-study outcomes and keep study/evaluation denominators separate.\\
+\req{R02} & Version evidence, issue definitions, claim targets, identity proxies, completeness boundaries, rules, and outputs.\\
+\req{R03} & Distinguish citation, related-work mention, training/pretraining/tuning/testing use, annotation use, and non-use.\\
+\req{R04} & Represent release, split, component, and transformation separately; unresolved identity remains unresolved.\\
+\req{R05} & Emit no scientific conclusion solely from missing evidence, citation, dataset ancestry, or graph reachability.\\
+\req{R06} & Validate positive and negative evidence obligations independently; localize mixed/conflicting inputs.\\
+\req{R07} & Keep issue applicability and separation dimensions as separate propositions.\\
+\req{R08} & Every consequential output resolves to evidence locators, rule version, scope, and claim target.\\
+\req{R09} & Independently double-annotate all final-test cases without exposing predictions.\\
+\req{R10} & Include strong, evidence-matched registry/checklist, flat-record, and direct-assessment comparisons.\\
+\req{R11} & Report applicable-case recall, false reassurance, unsupported decisive outputs, counts, and uncertainty together.\\
+\req{R12} & Measure effort by role and distinguish preparation, consumption, adjudication, and maintenance.\\
+\req{R13} & Keep the evidence ledger authoritative; graph projections are reproducible and replaceable.\\
+\req{R14} & Publish only reviewed, permitted material; keep patient data and arbitrary code execution out of scope.\\
+\req{R15} & Label synthetic conformance, reviewed-input, automatic, and human-reviewed results separately.\\
+\req{R16} & Allow research completion without a hosted platform, GraphRAG, or fine-tuned model.\\
+\bottomrule
+\end{longtable}
+
+\subsection{Quality requirements}
+\begin{tabularx}{\linewidth}{@{}L{31mm}Y@{}}
+\toprule
+\textbf{Quality} & \textbf{Requirement}\\ \midrule
+Evidence integrity & Every substantive assessment has a resolvable provenance path; evidence locators are versioned.\\
+Reproducibility & Replaying a frozen evidence snapshot and rule configuration yields the same structured conclusions.\\
+Fail-safe behavior & Parse failure, missing source, unresolved identity, or model failure remains explicit rather than disappearing.\\
+Portability & Public-core prototype runs without proprietary clinical data or mandatory paid model access.\\
+Security & External documents are untrusted input; no source-supplied code or instructions are executed.\\
+Maintainability & Source adapters, extraction, evidence model, assessment kernel, graph projection, and UI are separable.\\
+Usability & Status is expressed in text, not color alone; UNKNOWN includes a concrete next-check record.\\
+\bottomrule
+\end{tabularx}
+
+\section{Roadmap and decision gates}
+\label{sec:roadmap}
+The roadmap is evidence-gated rather than a fixed completion promise. The first measured quantity is effort to create an independently defensible case, including failed retrieval attempts.
+
+\begin{longtable}{@{}L{15mm}L{50mm}L{47mm}L{38mm}@{}}
+\toprule
+\textbf{Stage} & \textbf{Work package} & \textbf{Gate evidence} & \textbf{Next step if justified}\\ \midrule
+\endfirsthead
+\toprule\textbf{Stage} & \textbf{Work package} & \textbf{Gate evidence} & \textbf{Next step if justified}\\ \midrule\endhead
+P0 & Freeze issue contract, claim target, discovery frame, evidence budget, and reviewer roles. & Observable task, lawful sources, independent review route, pinned historical evidence. & Six-study micro-pilot.\\
+P1 & Six-study workload calibration; then a 20--30-study naturalistic sample if warranted. & Recoverability denominators, contrasting cases or their absence, disagreement, effort by role. & Freeze/narrow task and forecast annotation.\\
+P2 & Stabilize evidence contracts; independent development annotation; competitive baselines. & Reproducible difficult cases that are not merely lookup. & Freeze benchmark/evaluation configuration.\\
+P3 & Run reviewed-evidence and automatic comparisons; compositional holdouts where supported. & Interpretable quality--effort results including recall and false reassurance. & Proceed, simplify, or stop platform expansion.\\
+P4 & Small user feasibility study and maintenance/reuse analysis. & Real decision relevance and credible benefit/cost hypothesis. & Optional graph UI and workflow iteration.\\
+P5 & Release public-safe benchmark, assessment kernel, baseline outputs, limitations, and evidence-driven conclusion. & Reproducible package and rights review. & GraphRAG or broader domains only with separate justification.\\
+\bottomrule
+\end{longtable}
+
+\subsection{Continuation rules}
+\textbf{Continue the method study} if real cases require consequential cross-document distinctions and independent judgments are feasible. \textbf{Simplify to a registry} if a flat curated record supports the same decisions at lower cost. \textbf{Narrow the claim} if only one issue mechanism or dataset family is recoverable. \textbf{Stop platform expansion} if evidence is mostly unrecoverable, independent labeling is unavailable, or unsupported warnings cannot be controlled.
+
+\section{Six-study pilot operating procedure}
+\label{sec:pilot}
+\subsection{Discovery frame and selection}
+Use references 41--64 identified in the primary DermaMNIST investigation as the bounded initial candidate frame; they are examples selected by the issue authors, not a representative sample of medical AI \cite{abhishek2025}. Copy and deduplicate the complete candidate list, retain version links and unresolved eligibility, and freeze the list before examining applicability.
+
+Assign each unique study a stable key (normalized DOI, otherwise arXiv root ID, otherwise normalized title/year). Order by a frozen deterministic hash and inspect the first six. Do not replace inaccessible, citation-only, or unresolvable studies to manufacture assessable cases.
+
+\subsection{Work budget for calibration}
+\begin{tabularx}{\linewidth}{@{}L{28mm}Y@{}}
+\toprule
+\textbf{Step} & \textbf{Proposed record and stopping rule}\\ \midrule
+Capture & Initial cap: 15 minutes per study for lawful full text, supplements, and explicitly linked artifacts. Log every attempted route and access/right boundary.\\
+Evidence construction & Additional cap: 30 minutes per study for facts and input enumeration. Incomplete inventories remain incomplete.\\
+Independent judgments & Two reviewers work separately on each enumerated evaluation; log time, evidence, interpretation, action, and abstention.\\
+Baseline comparison & Same frozen evidence bundle for registry/checklist and MedDataTrace-style assessment.\\
+Effort accounting & Retrieval, first/second annotation, adjudication, report preparation, reader verification, and correction time logged separately by role.\\
+Reforecast & After six studies, publish all denominators, unresolved cases, disagreement, and observed work before deciding whether to expand.\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Activation requirements}
+Before reference labeling: assign independent reviewers; pin and independently check $W_0$ and historical partition identity; record identity qualifications and transformation policy; freeze the candidate list and selection rule; freeze the primary review task and evidence-search budget. Source collection can begin while personnel logistics are completed, but scientific labels require the relevant gates.
+
+\subsection{What the micro-pilot can and cannot establish}
+Six studies calibrate workload and reveal failure modes. They cannot establish general effectiveness, prevalence, or broad originality. A useful result may be that certain cross-document correction cases change decisions while straightforward exact-partition cases do not. An equally useful result may be that a strong registry is sufficient for most cases.
+
+\appendix
+\section{Canonical assessment record example}
+The following is fictional and asserts neither a real dependency nor a real dataset problem.
+\begin{lstlisting}
+{
+  "schema_version": "current",
+  "evaluation_id": "example-eval",
+  "issue_id": "DM-H01",
+  "scope_id": "example-dev-test-pair",
+  "claim_target": "REPORTED_SETUP",
+  "source_snapshot": "example-snapshot",
+  "inventory_basis": "DOCUMENTED_INPUTS",
+  "inventory_complete_for_boundary": false,
+  "unresolved_stages": ["pretraining data unspecified"],
+  "identity_proxy": "recorded_lesion_id",
+  "identity_metadata_version": null,
+  "known_identity_limitations": ["identifier quality unresolved"],
+  "presence_certificate_ids": [],
+  "absence_certificate_ids": [],
+  "applicability": "UNKNOWN",
+  "correction_evidence": "UNRESOLVED",
+  "next_check": {
+    "missing_artifact": "partition manifest linked to this result",
+    "availability": "NOT_FOUND_IN_SEARCHED_SOURCES",
+    "fallback": "qualify the claim; record unresolved scope"
+  }
+}
+\end{lstlisting}
+
+\section{Minimum scientific fixture suite}
+\begin{longtable}{@{}L{13mm}L{75mm}L{63mm}@{}}
+\toprule
+\textbf{ID} & \textbf{Evidence situation} & \textbf{Expected distinction}\\ \midrule
+\endfirsthead
+\toprule\textbf{ID} & \textbf{Evidence situation} & \textbf{Expected distinction}\\ \midrule\endhead
+S01 & Only an ancestral dataset is known to be affected; final use unspecified. & UNKNOWN, not APPLIES.\\
+S02 & Explicit unchanged use of an exact affected historical partition. & Scoped reported-setup APPLIES, not execution proof.\\
+S03 & Correction exists publicly, but its use is not established. & No mitigated conclusion.\\
+S04 & Adopted correction plus sufficient exclusion postcondition. & Supported negative result with mitigation reason.\\
+S05 & Corrected input plus unresolved second input. & No whole-boundary negative summary.\\
+S06 & Applicable input plus unresolved/conflicting second input. & Localized APPLIES with residual uncertainty.\\
+S07 & Positive and negative evidence for the same proposition. & CONFLICTING.\\
+S08 & Historical witnesses are excluded under a new partition. & DM-H01 may be negative while broader separation remains UNKNOWN.\\
+S09 & Distinct recorded IDs under metadata with known missed identity matches. & Identifier-level conclusion only.\\
+S10 & Static splitting code not linked to the reported run. & Procedure-level evidence only.\\
+S11 & Dataset appears only in related work. & No experimental dependency established.\\
+S12 & One label-free route is clear, another route unresolved. & Exclude only the documented label-free route.\\
+S13 & Empty/depth-limited graph traversal. & Coverage incomplete; no absence conclusion.\\
+S14 & Statements refer to different versions or dates. & Resolve scope/time before calling conflict.\\
+S15 & Paper cannot be retrieved or parsed. & Coverage outcome, not scientific negative.\\
+S16 & Same facts/rules represented in Neo4j and flat structures. & Same scientific conclusion; disagreement is a bug.\\
+S17 & One-sided complete manifest blocks every $W_0$ witness. & N1 exclusion can be supported without full reconstruction of the other set.\\
+S18 & Identical structured prediction repeated twice. & Score once scientifically; record duplication separately.\\
+S19 & Incompatible predictions for one atom. & Invalid scientific output; do not select favorable answer.\\
+S20 & A supported symmetric historical witness is $(a,b)$, while the assessed pair contains $b$ in development and $a$ in test. & The reversed stored orientation $(b,a)$ preserves DM-H01 applicability; role reversal is not exclusion.\\
+S21 & One scope is CONFLICTING, another is UNKNOWN, and there is no conflict-free positive scope. & Evaluation-level summary is CONFLICTING, with UNKNOWN scope preserved.\\
+S22 & All relevant scopes are supported negative under a complete named boundary, using one-sided or mixed N1 witness blocking where sufficient. & Evaluation-level NOT\_APPLICABLE within that boundary; do not require unrelated complete manifests.\\
+\bottomrule
+\end{longtable}
+
+\section{Conformance tests and implementation boundary}
+The source package includes a small Python reference implementation of the evidence-state/composition contract and synthetic unit tests. These tests validate bookkeeping assumptions only. They do not determine whether a real passage satisfies a scientific evidence obligation, validate medical evidence, or demonstrate usefulness.
+
+\begin{lstlisting}
+python -m unittest discover -s reference_semantics -v
+latexmk -pdf -interaction=nonstopmode -halt-on-error meddatatrace_specification.tex
+\end{lstlisting}
+
+The project should add issue-specific DM-H01 tests after the historical witness set and identity mappings are independently pinned. Real reference answers remain withheld from evaluated methods.
+
+\clearpage
+\printbibliography[heading=bibintoc,title={References}]
+\end{document}

@@ -1,0 +1,23 @@
+{
+  "record_kind": "UNPOPULATED_TEMPLATE",
+  "study_id": null,
+  "candidate_reference_number": null,
+  "canonical_study_key": null,
+  "all_version_identifiers": [],
+  "sampling_rank": null,
+  "selected": null,
+  "eligibility": "NOT_SCREENED",
+  "access_status": "NOT_ATTEMPTED",
+  "parse_status": "NOT_ATTEMPTED",
+  "source_search_attempts": [],
+  "evaluations_enumerable": null,
+  "evaluation_ids": [],
+  "documented_input_inventory_status": "NOT_STARTED",
+  "reviewer_initial_records": [],
+  "source_fact_file": null,
+  "withheld_reference_file": null,
+  "rights_notes": null,
+  "effort_records": [],
+  "unresolved_questions": [],
+  "completion_status": "NOT_STARTED"
+}
