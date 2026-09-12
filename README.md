@@ -36,7 +36,7 @@ See the specification for the research scope, evidence boundary, and roadmap.
 ## Development
 
 Prerequisites: Python 3.14 and [uv](https://docs.astral.sh/uv/). The checked-in project
-requires Python `>=3.14,<3.15`; CI installs the managed Python version and uses uv 0.12.10.
+requires Python `>=3.14,<3.15`; CI installs the managed Python version and uses uv 0.12.13.
 
 ```bash
 make setup
