@@ -61,7 +61,7 @@ On Debian or Ubuntu, the CI-equivalent package set is:
 
 ```bash
 sudo apt-get install latexmk biber texlive-latex-recommended texlive-latex-extra \
-  texlive-fonts-recommended texlive-pictures lmodern
+  texlive-bibtex-extra texlive-fonts-recommended texlive-pictures lmodern
 ```
 
 Do not install operating-system packages automatically as part of local setup. If native
