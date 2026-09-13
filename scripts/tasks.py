@@ -56,6 +56,12 @@ def lint() -> None:
     )
 
 
+def typecheck() -> None:
+    run("mypy", str(TASK_RUNNER))
+    for code_dir in CODE_DIRS:
+        run("mypy", ".", cwd=code_dir)
+
+
 def format_code() -> None:
     run("ruff", "check", "--fix", str(TASK_RUNNER), *(str(path) for path in CODE_DIRS))
     run("ruff", "format", str(TASK_RUNNER), *(str(path) for path in CODE_DIRS))
@@ -68,6 +74,7 @@ def check_templates() -> None:
 
 def check() -> None:
     lint()
+    typecheck()
     test()
     check_templates()
 
@@ -97,13 +104,23 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "task",
-        choices=("setup", "test", "lint", "format", "check-templates", "check", "spec"),
+        choices=(
+            "setup",
+            "test",
+            "lint",
+            "typecheck",
+            "format",
+            "check-templates",
+            "check",
+            "spec",
+        ),
     )
     args = parser.parse_args()
     tasks = {
         "setup": setup,
         "test": test,
         "lint": lint,
+        "typecheck": typecheck,
         "format": format_code,
         "check-templates": check_templates,
         "check": check,

@@ -11,13 +11,12 @@ It does not determine whether any real source actually supports a linkage or iss
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
-from typing import Optional
+from enum import StrEnum
 
 from semantics import State
 
 
-class Referenceability(str, Enum):
+class Referenceability(StrEnum):
     ARTIFACT_GOLD = "ARTIFACT_GOLD"
     SILVER_ONLY = "SILVER_ONLY"
     REFERENCE_UNSCORABLE = "REFERENCE_UNSCORABLE"
@@ -25,7 +24,7 @@ class Referenceability(str, Enum):
     INACCESSIBLE = "INACCESSIBLE"
 
 
-class GoldBasis(str, Enum):
+class GoldBasis(StrEnum):
     POSITIVE = "POSITIVE"
     NEGATIVE = "NEGATIVE"
     EXPLICIT_UNKNOWN = "EXPLICIT_UNKNOWN"
@@ -41,13 +40,13 @@ class AdmissionInput:
     computation_reproducible: bool
     domain_judgment_required: bool = False
     inaccessible: bool = False
-    gold_basis: Optional[GoldBasis] = None
+    gold_basis: GoldBasis | None = None
 
 
 @dataclass(frozen=True)
 class AdmissionResult:
     referenceability: Referenceability
-    gold_state: Optional[State]
+    gold_state: State | None
 
 
 def admit(inp: AdmissionInput) -> AdmissionResult:

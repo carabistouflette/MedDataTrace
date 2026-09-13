@@ -1,4 +1,4 @@
-.PHONY: setup test lint format check-templates check spec
+.PHONY: setup test lint typecheck format check-templates check spec
 
 setup:
 	uv sync --locked
@@ -8,6 +8,9 @@ test:
 
 lint:
 	uv run --locked python scripts/tasks.py lint
+
+typecheck:
+	uv run --locked python scripts/tasks.py typecheck
 
 format:
 	uv run --locked python scripts/tasks.py format

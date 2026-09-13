@@ -7,19 +7,19 @@ It implements only the v0.2 evidence-state and bounded composition contract.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from enum import Enum
-from typing import Sequence
+from enum import StrEnum
 
 
-class State(str, Enum):
+class State(StrEnum):
     UNKNOWN = "UNKNOWN"
     APPLIES = "APPLIES"
     NOT_APPLICABLE = "NOT_APPLICABLE"
     CONFLICTING = "CONFLICTING"
 
 
-class ClaimTarget(str, Enum):
+class ClaimTarget(StrEnum):
     REPORTED_SETUP = "REPORTED_SETUP"
     DOCUMENTED_PROCEDURE = "DOCUMENTED_PROCEDURE"
     EXECUTION_LINKED_ARTIFACT = "EXECUTION_LINKED_ARTIFACT"
