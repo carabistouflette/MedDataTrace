@@ -2,13 +2,13 @@
   "record_kind": "UNPOPULATED_TEMPLATE",
   "study_id": null,
   "evaluation_id": null,
-  "person_id": null,
-  "role": null,
+  "actor": "developer_or_compute",
   "activity": null,
   "minutes": null,
+  "compute_cost": null,
   "success_or_failure": null,
   "shared_or_incremental": null,
-  "comparison_arm": null,
+  "pipeline_or_baseline": null,
   "artifact_created": null,
   "notes": null
 }

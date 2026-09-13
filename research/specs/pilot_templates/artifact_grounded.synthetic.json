@@ -1,0 +1,30 @@
+{
+  "format_version": "current",
+  "record_kind": "SYNTHETIC_EXAMPLE",
+  "study_id": "SYNTHETIC-STUDY",
+  "evaluation_id": "SYNTHETIC-E1",
+  "snapshot_id": "SYNTHETIC-T1",
+  "claim_target": "REPORTED_SETUP",
+  "issue_definition_ref": "DM-H01@draft",
+  "sources": [
+    {
+      "source_id": "SYNTHETIC-S1",
+      "pointer": "urn:synthetic:source-1",
+      "sha256": null,
+      "rights": "SYNTHETIC; no third-party source text"
+    }
+  ],
+  "assertions": [
+    {
+      "assertion_id": "SYNTHETIC-A1",
+      "source_id": "SYNTHETIC-S1",
+      "locator": "SYNTHETIC methods paragraph 1",
+      "source_statement": "SYNTHETIC: the reported setup uses training and testing partitions of artifact M unchanged.",
+      "predicate": "SOURCE_REPORTS_USE",
+      "literal_object": "artifact M",
+      "source_target": "REPORTED_SETUP"
+    }
+  ],
+  "reference_tier": "SYNTHETIC_CONFORMANCE",
+  "notes": "This file tests schema/logic only; it is not scientific ground truth."
+}
