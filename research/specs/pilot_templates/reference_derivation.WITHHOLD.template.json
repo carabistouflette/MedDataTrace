@@ -1,0 +1,41 @@
+{
+  "record_kind": "UNPOPULATED_TEMPLATE",
+  "use": "WITHHOLD FROM EVALUATED METHODS",
+  "study_id": null,
+  "evaluation_id": null,
+  "claim_target": null,
+  "issue_version": "DM-H01@draft",
+  "referenceability_status": "NOT_ASSESSED",
+  "evaluation_source": {
+    "source_id": null,
+    "locator": null,
+    "literal_evaluation_identifier": null
+  },
+  "artifact_linkage": {
+    "artifact_id": null,
+    "source_id": null,
+    "locator": null,
+    "literal_identifier_or_config_ref": null,
+    "assumptions": []
+  },
+  "artifact_version": {
+    "uri_or_pointer": null,
+    "sha256": null,
+    "version_id": null
+  },
+  "identity_basis": {
+    "mapping_id": null,
+    "version": null,
+    "limitations": []
+  },
+  "non_mechanical_preparation_steps": [],
+  "deterministic_inputs": [],
+  "reference_generator": {
+    "version": null,
+    "sha256": null
+  },
+  "reference_state": null,
+  "reference_state_admission_route": null,
+  "reproducibility_check": "NOT_RUN",
+  "notes": null
+}

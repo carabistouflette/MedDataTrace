@@ -11,13 +11,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SPEC_DIR = ROOT / "research" / "specs"
 REFERENCE_DIR = SPEC_DIR / "reference_semantics"
+GENERATION_DIR = SPEC_DIR / "reference_generation"
+CODE_DIRS = (REFERENCE_DIR, GENERATION_DIR)
 TASK_RUNNER = ROOT / "scripts" / "tasks.py"
 TEMPLATES = (
     SPEC_DIR / "pilot_templates" / "effort_record.template.json",
     SPEC_DIR / "pilot_templates" / "operational_record.json",
-    SPEC_DIR / "pilot_templates" / "reference_labels.WITHHOLD.template.json",
+    SPEC_DIR / "pilot_templates" / "artifact_reference.WITHHOLD.template.json",
+    SPEC_DIR / "pilot_templates" / "reference_derivation.WITHHOLD.template.json",
     SPEC_DIR / "pilot_templates" / "study_record.template.json",
-    SPEC_DIR / "pilot_templates" / "track_r.synthetic.json",
+    SPEC_DIR / "pilot_templates" / "artifact_grounded.synthetic.json",
 )
 
 
@@ -30,25 +33,32 @@ def setup() -> None:
 
 
 def test() -> None:
-    run(
-        sys.executable,
-        "-m",
-        "unittest",
-        "discover",
-        "-s",
-        str(REFERENCE_DIR),
-        "-v",
-    )
+    for test_dir in (REFERENCE_DIR, GENERATION_DIR):
+        run(
+            sys.executable,
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            str(test_dir),
+            "-v",
+        )
 
 
 def lint() -> None:
-    run("ruff", "check", str(TASK_RUNNER), str(REFERENCE_DIR))
-    run("ruff", "format", "--check", str(TASK_RUNNER), str(REFERENCE_DIR))
+    run("ruff", "check", str(TASK_RUNNER), *(str(path) for path in CODE_DIRS))
+    run(
+        "ruff",
+        "format",
+        "--check",
+        str(TASK_RUNNER),
+        *(str(path) for path in CODE_DIRS),
+    )
 
 
 def format_code() -> None:
-    run("ruff", "check", "--fix", str(TASK_RUNNER), str(REFERENCE_DIR))
-    run("ruff", "format", str(TASK_RUNNER), str(REFERENCE_DIR))
+    run("ruff", "check", "--fix", str(TASK_RUNNER), *(str(path) for path in CODE_DIRS))
+    run("ruff", "format", str(TASK_RUNNER), *(str(path) for path in CODE_DIRS))
 
 
 def check_templates() -> None:

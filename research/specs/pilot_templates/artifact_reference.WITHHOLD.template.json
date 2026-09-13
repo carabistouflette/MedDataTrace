@@ -1,0 +1,40 @@
+{
+  "record_kind": "UNPOPULATED_TEMPLATE",
+  "use": "WITHHOLD FROM EVALUATED METHODS",
+  "study_id": null,
+  "evaluation_id": null,
+  "issue_version": "DM-H01@draft",
+  "snapshot_id": null,
+  "claim_target": null,
+  "reference_tier": "ARTIFACT_GOLD",
+  "reference_generator_version": null,
+  "reference_generator_sha256": null,
+  "reference_artifacts": [],
+  "scope_atom": null,
+  "expected_applicability": null,
+  "expected_evidence_ids": [],
+  "identity_basis": null,
+  "limitations": [],
+  "reproducibility_check": "NOT_RUN",
+  "notes": null,
+  "referenceability_status": "ARTIFACT_GOLD_CANDIDATE",
+  "evaluation_locator": null,
+  "evaluation_artifact_linkage": {
+    "artifact_id": null,
+    "linkage_source_id": null,
+    "linkage_locator": null,
+    "literal_identifier_or_config_ref": null,
+    "linkage_assumptions": [],
+    "linkage_status": "NOT_ESTABLISHED"
+  },
+  "identity_mapping": {
+    "mapping_id": null,
+    "version": null,
+    "limitations": []
+  },
+  "non_mechanical_preparation_steps": [],
+  "reference_state_admission_route": null,
+  "gold_unknown_basis": null,
+  "gold_conflict_basis": null,
+  "derivation_reproducibility_check": "NOT_RUN"
+}

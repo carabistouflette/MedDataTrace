@@ -27,7 +27,7 @@ See the specification for the research scope, evidence boundary, and roadmap.
 ## Repository layout
 
 - `research/specs/`: authoritative TeX specification, bibliography, synthetic semantics,
-  tests, and pilot templates.
+  deterministic DM-H01 reference generation, tests, and pilot templates.
 - `pyproject.toml` and `uv.lock`: non-package development environment and locked Ruff
   tooling.
 - `Makefile`: reproducible setup, checks, formatting, and specification build commands.
@@ -50,8 +50,9 @@ uv run --locked python scripts/tasks.py format
 `scripts/tasks.py` is the portable task entry point. On Unix, the Makefile remains an
 optional convenience wrapper (`make setup`, `make check`, `make format`, `make spec`).
 
-The check task runs Ruff, the 24 synthetic unittest methods, and JSON syntax checks for
-all five supplied pilot artifacts. It does not validate a scientific schema.
+The check task runs Ruff, synthetic semantics, reference-admission, and DM-H01 generator
+unittests, plus JSON syntax checks for all six supplied pilot artifacts. It does not
+validate a scientific schema.
 
 ## Building the specification
 
@@ -82,10 +83,14 @@ synthetic examples only. Do not commit acquired source material, raw images, pop
 reference labels, reviewer identities, or unreviewed results. `.gitignore` is accident
 prevention, not access control. Real withheld labels must remain outside this checkout in
 separately access-controlled storage; they must be unavailable both to evaluated methods
-and to naive readers. Never populate the checked-in reference-label template itself.
+and to evaluated extraction or assessment tools. Never populate the checked-in withheld
+reference or derivation templates themselves.
 
-The pilot remains explicitly unapproved and unpopulated. Repository readiness is not P0
-scientific activation. No paid model account is needed for this foundation.
+The DM-H01 P0 contract is frozen for the official public MedMNIST/DermaMNIST membership
+basis, and one complete reference derivation is withheld after reproducibility checks.
+The six-study micro-pilot remains unactivated until its operating records are frozen.
+Expert validation is optional future work. Repository readiness is not P0 scientific
+activation. No paid model account is needed for this foundation.
 
 ## License and source rights
 

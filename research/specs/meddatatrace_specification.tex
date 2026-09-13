@@ -29,7 +29,7 @@
 \fancyhf{}
 \fancyhead[L]{\small\sffamily\color{Muted}MedDataTrace / Research and Project Specification}
 \fancyhead[R]{\small\sffamily\color{Muted}Working specification}
-\fancyfoot[L]{\footnotesize\sffamily\color{Muted}12 September 2026}
+\fancyfoot[L]{\footnotesize\sffamily\color{Muted}13 September 2026}
 \fancyfoot[R]{\small\sffamily\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \usepackage[most]{tcolorbox}
@@ -72,22 +72,22 @@
 \vspace{17mm}
 {\sffamily\bfseries\fontsize{36}{40}\selectfont\color{Ink}MedDataTrace\par}
 \vspace{5mm}
-{\sffamily\fontsize{19}{24}\selectfont\color{Ink}Evidence-qualified review of dataset issues\par in medical-imaging evaluations\par}
+{\sffamily\fontsize{19}{24}\selectfont\color{Ink}Automated reconstruction of dataset provenance\par and issue applicability in medical-imaging evaluations\par}
 \vspace{12mm}
 \begin{decisionbox}
 \textbf{Central research question}\par
-At comparable evidence access and explicitly measured review effort, can experiment-specific applicability assessment improve review decisions over a competent reviewer using a curated issue registry and a structured checklist?
+Can an evidence-bounded ML pipeline reconstruct enough experiment-level dataset provenance from public scientific artifacts to correctly determine whether a known, artifact-verifiable dataset issue applies to a reported evaluation, while abstaining when the evidence is insufficient?
 \end{decisionbox}
 \vspace{7mm}
 \begin{tabularx}{\linewidth}{@{}L{37mm}Y@{}}
 \textcolor{Muted}{Document status} & Single authoritative working specification\\
-\textcolor{Muted}{Date} & 12 September 2026\\
+\textcolor{Muted}{Date} & 13 September 2026\\
 \textcolor{Muted}{Starting domain} & HAM10000 / DermaMNIST dermatology image benchmarks\\
-\textcolor{Muted}{Primary scientific output} & Evidence-qualified assessment method, independently annotated cases, and comparative evaluation\\
+\textcolor{Muted}{Primary scientific output} & Artifact-grounded benchmark, ML provenance extraction, and end-to-end applicability evaluation\\
 \textcolor{Muted}{Primary engineering output} & Auditable evidence records, deterministic assessment kernel, and optional graph projection\\
 \end{tabularx}
 \vfill
-{\small\color{Muted}This document specifies work that is not yet empirically validated. No claim is made that MedDataTrace is already more accurate, more efficient, or more useful than a competent manual review workflow. The first milestone is a bounded feasibility study using real public evidence.\par}
+{\small\color{Muted}This document specifies work that is not yet empirically validated. No claim is made that MedDataTrace is already more accurate, more efficient, or more useful than existing extraction or review approaches. The first milestone is a bounded feasibility study using artifact-verifiable public evidence; expert human adjudication is optional future validation rather than a prerequisite.\par}
 \vspace{5mm}
 {\color{Accent}\rule{\linewidth}{1.2pt}}
 \end{titlepage}
@@ -97,14 +97,16 @@ At comparable evidence access and explicitly measured review effort, can experim
 \addcontentsline{toc}{section}{Executive summary}
 Medical-AI papers often depend on public datasets whose releases, partitions, labels, or documentation later receive corrections or issue reports. A dataset-level warning does not establish that a particular experiment is affected: the experiment may use a corrected release, a custom partition, an unrelated component, or only cite the dataset. Conversely, a renamed or derived artifact can preserve a relevant issue even when the dataset name changes.
 
-\textbf{MedDataTrace is designed to assess that experiment-specific question.} For a named dataset issue and a named evaluation, it reconstructs documented data use, aligns the evidence to the issue's scope, represents corrections and contradictory evidence, and returns a scoped conclusion such as \status{APPLIES}, \status{NOT\_APPLICABLE}, \status{UNKNOWN}, or \status{CONFLICTING}. The output must state what proposition was assessed, what evidence supports it, what remains unresolved, and what a reviewer should do next.
+\textbf{MedDataTrace is designed to automate reconstruction of that experiment-specific provenance question from public scientific artifacts.} For a named dataset issue and a named evaluation, the system retrieves and structures documented data use, resolves releases/splits/components where the evidence permits, aligns the recovered facts to the issue's scope, and applies a deterministic issue contract. The output is a scoped state such as \status{APPLIES}, \status{NOT\_APPLICABLE}, \status{UNKNOWN}, or \status{CONFLICTING}, with explicit evidence locators and limitations.
 
-The scientific contribution under investigation is not a new graph database, ontology, LLM pipeline, or generic issue-status pattern. Close work already covers dataset tracking, living reviews, structured medical-AI metadata, lineage reconstruction, and cross-domain applicability statements \cite{inthepicture2025,sourget2024,atlas,tracing2026,openvex}. The credible contribution prospect is a source-grounded method and benchmark for deciding whether a documented dataset issue applies to a specific medical-imaging evaluation under incomplete, versioned, and sometimes conflicting evidence.
+The scientific contribution under investigation is not a new graph database, ontology, LLM pipeline, or generic issue-status pattern. Close work already covers dataset tracking, living reviews, structured medical-AI metadata, lineage reconstruction, and cross-domain applicability statements \cite{inthepicture2025,sourget2024,atlas,tracing2026,openvex}. The credible contribution prospect is an artifact-grounded benchmark and ML pipeline for reconstructing experiment-level dataset provenance---especially the linkage from a particular reported evaluation to the exact versioned artifacts it used---and determining the applicability of known, mechanically testable dataset issues under incomplete, versioned, and conflicting public evidence.
 
-The project begins with one concrete historical issue in the DermaMNIST/HAM10000 family. A six-study micro-pilot measures evidence recoverability, independent annotation feasibility, and real effort. A broader platform, GraphRAG, and model fine-tuning are conditional on evidence that the task is both recoverable and useful. A simpler curated registry is an acceptable outcome if it supports the same decisions with less maintenance.
+The primary validation deliberately avoids unavailable expert adjudication. Cases enter the primary gold benchmark only when the complete reference derivation---reported evaluation, source-supported artifact linkage, identity/membership basis, and deterministic issue-specific result---can be reproduced from frozen public artifacts. Weak supervision and LLM-assisted labels may be used as \emph{silver} training data, but not as gold ground truth. Cases that require domain judgment beyond the frozen contract remain visible as \status{REQUIRES\_EXPERT\_REVIEW}; cases whose reference derivation cannot be established are \status{REFERENCE\_UNSCORABLE}. Both are excluded from gold accuracy claims. A reproducibly justified \status{UNKNOWN} is a distinct gold state, not a synonym for an unscorable reference.
+
+The project begins with one concrete historical issue in the DermaMNIST/HAM10000 family. A six-study micro-pilot measures public-evidence recoverability, artifact-grounded reference feasibility, recurring extraction tasks, and real implementation effort. A broader graph platform, GraphRAG, supervised fine-tuning, or future expert user study is conditional on evidence that the task is recoverable and technically useful.
 
 \begin{decisionbox}[title=Current commitment]
-Build and evaluate the evidence-assessment task before building a platform. The project can succeed as a bounded benchmark and assessment method even if no hosted graph application or GraphRAG interface is ultimately justified.
+Build and evaluate the artifact-grounded evidence-reconstruction task before building a platform. The project can succeed as a reproducible benchmark and ML provenance-reconstruction study even if expert user evaluation, a hosted graph application, or GraphRAG is never justified.
 \end{decisionbox}
 
 \clearpage
@@ -120,17 +122,17 @@ A paper can cite a dataset without using it experimentally. An experiment can us
 The project addresses the resulting \emph{review task}. It does not assume that every dependency is problematic or that every documented problem propagates unchanged. Its core output is a qualified relation between a specific evaluation and a documented issue, supported by inspectable evidence.
 
 \subsection{Overall goal}
-\textbf{Overall goal:} reduce the effort and error involved in deciding which documented data-related findings warrant qualification, rechecking, or no action for a specific medical-AI evaluation, without turning missing information into unsupported warnings or reassurance.
+\textbf{Overall goal:} automatically reconstruct enough experiment-level dataset provenance from public scientific evidence to determine whether a frozen, artifact-verifiable dataset issue applies to a reported medical-AI evaluation, while preserving uncertainty instead of inventing missing facts.
 
 \begin{tabularx}{\linewidth}{@{}L{13mm}Y Y@{}}
 \toprule
 \textbf{ID} & \textbf{Objective} & \textbf{Observable result}\\ \midrule
-O1 & Recover experiment-specific data dependencies. & Reviewed records distinguish dataset family, release, split, component, and usage role.\\
+O1 & Recover experiment-specific data dependencies. & Structured records distinguish dataset family, release, split, component, transformation, and usage role.\\
 O2 & Assess issue applicability with explicit scope and uncertainty. & Every assessment identifies proposition, claim target, evidence basis, and unresolved questions.\\
 O3 & Preserve scientific boundaries. & Dependency, applicability, measured effect, and clinical consequence are never collapsed.\\
-O4 & Establish a reproducible research contribution. & Independently annotated cases, strong baselines, held-out evaluation, and error analysis.\\
-O5 & Test practical value before expansion. & Decision quality and effort are measured against a competent registry/checklist workflow.\\
-O6 & Retain graph/ML relevance without making them the novelty claim. & Graph and extraction components are evaluated only where they add measurable value.\\
+O4 & Create a reproducible benchmark without expert-dependent gold labels. & Primary test cases have reproducible evaluation-to-artifact derivations and deterministic reference states; silver, reference-unscorable, and expert-required cases are labeled separately.\\
+O5 & Establish a genuine ML task. & Rules, direct LLM extraction, and learned/embedding-based extraction are compared on held-out studies and end-to-end applicability.\\
+O6 & Retain graph relevance without making it the novelty claim. & Graph context/projection is evaluated only where it improves resolution, retrieval, or maintainability.\\
 \bottomrule
 \end{tabularx}
 
@@ -151,14 +153,16 @@ Clinical consequence & The issue changed real-world decisions or outcomes. & Out
 \end{tabularx}
 
 \subsection{Primary hypothesis}
-\textbf{H1 -- decision value.} At comparable evidence access and explicitly measured review effort, experiment-specific applicability assessment improves the correctness--effort trade-off for review decisions relative to a searchable curated registry plus a competent structured checklist.
+\textbf{H1 -- automated evidence reconstruction.} On artifact-verifiable held-out cases, a structured evidence-reconstruction pipeline can recover experiment-level provenance and produce correct scoped applicability states with better evidence fidelity and/or fewer unsupported decisive outputs than simple alias/rule extraction and direct LLM assessment under the same public-source access, \emph{at a useful level of decisive coverage}. Error and coverage must be interpreted jointly; an always-\status{UNKNOWN} method is an explicit sanity baseline and cannot satisfy H1 merely by avoiding unsupported decisive outputs.
 
-This is a hypothesis to test, not a promise. The first study is descriptive. A later confirmatory study would require effect sizes, sample-size justification, and a prespecified practical margin informed by pilot results.
+\textbf{H2 -- graph/context value (secondary).} Citation and lineage context may improve difficult entity/version/split resolution or evidence retrieval relative to text-only extraction. This hypothesis is optional and is tested only if the pilot reveals enough ambiguous cases.
+
+These are hypotheses to test, not promises. The first study is descriptive. A later confirmatory study would require a larger artifact-grounded test set, frozen model choices, and prespecified margins informed by pilot results.
 
 \section{Contribution and prior-art position}
 \label{sec:prior}
 \subsection{What is not claimed as novel}
-The project does not claim novelty for: tracking datasets used in papers; a knowledge graph of papers, models, and datasets; LLM extraction of structured metadata; dataset lineage reconstruction; generic issue propagation; a status vocabulary; or GraphRAG over medical literature. Relevant prior work already covers substantial parts of that space \cite{inthepicture2025,sourget2024,atlas,tracing2026,copycats,openvex}.
+The project does not claim novelty for: tracking datasets used in papers; a knowledge graph of papers, models, and datasets; LLM extraction of structured metadata; scientific entity/relation extraction from full text; weak supervision for scientific mention detection; dataset lineage reconstruction; generic issue propagation; a status vocabulary; or GraphRAG over medical literature. Relevant prior work already covers substantial parts of that space \cite{inthepicture2025,sourget2024,atlas,tracing2026,copycats,openvex,scirex2020,scier2024,scidmt2024}. The stronger distinction pursued here is linking a \emph{particular reported evaluation} to versioned artifacts whose issue-specific implications can then be checked under an explicit evidence boundary.
 
 \subsection{Contribution hypothesis}
 The strongest originality prospect is:
@@ -167,7 +171,7 @@ The strongest originality prospect is:
 \textbf{An evidence-qualified method and benchmark for assessing whether a documented dataset issue applies to a specific medical-imaging evaluation, with explicit treatment of release/split scope, corrections, contradictory evidence, identity limitations, and missing information.}
 \end{decisionbox}
 
-A claim of methodological advantage requires evidence that the proposed assessment improves decisions, evidence fidelity, or effort relative to strong alternatives. A benchmark or empirical case-study contribution does not require the method to win; it requires new, reliable, reusable knowledge about which distinctions matter, which documentation gaps block assessment, and what resolving them costs. A null comparative result is informative only when it is produced by a rigorous, reusable study rather than by implementation failure.
+A claim of methodological advantage requires evidence that the proposed pipeline improves provenance recovery, evidence fidelity, abstention behavior, end-to-end applicability accuracy, or implementation effort relative to strong alternatives. A benchmark or empirical case-study contribution does not require the method to win; it requires new, reliable, reusable knowledge about which experiment-level provenance facts are publicly recoverable, which documentation gaps block assessment, and what automation can or cannot resolve. A null comparative result is informative only when it is produced by a rigorous, reusable study rather than by implementation failure.
 
 \subsection{Capability comparison obligations}
 \begin{tabularx}{\linewidth}{@{}L{35mm}Y Y@{}}
@@ -179,6 +183,7 @@ RSNA ATLAS \cite{atlas} & Structured model/dataset cards, schemas, expert review
 Tracing the Roots \cite{tracing2026} & Dataset lineage reconstruction and contamination-related propagation. & Ancestry plus propagation is not sufficient novelty.\\
 OpenVEX \cite{openvex} & Product-specific issue applicability statuses and justifications. & Dependency-specific applicability is an established general pattern.\\
 Copycats \cite{copycats} & Copies, identifiers, documentation, and maintenance problems in medical imaging data. & Medical dataset identity/provenance problems are established.\\
+SciREX / SciER / SciDMT \cite{scirex2020,scier2024,scidmt2024} & Document/full-text scientific entity and relation extraction, including dataset mentions, weak supervision, supervised/LLM baselines, and held-out evaluation. & Scientific IE and silver supervision are not the novelty; evaluation-specific artifact linkage and issue-checkable provenance must carry the distinction.\\
 \bottomrule
 \end{tabularx}
 
@@ -189,7 +194,7 @@ For shared contrast cases, record whether a competitor was actually run, what ev
 \subsection{Initial domain}
 The first family is HAM10000 / DermaMNIST. A 2025 investigation reports historical DermaMNIST partition overlap, additional duplicate-identity problems, and corrected artifacts \cite{abhishek2025,zenodo}. This provides a real issue anchor. It does \emph{not} establish that downstream papers disclose enough information to determine applicability.
 
-The pilot is intentionally narrow. Generalization beyond this family requires additional independently documented issue mechanisms or dataset families.
+The pilot is intentionally narrow. Generalization beyond this family requires additional separately documented issue mechanisms or dataset families.
 
 \subsection{Public data sources}
 \begin{tabularx}{\linewidth}{@{}L{38mm}Y Y@{}}
@@ -198,7 +203,7 @@ The pilot is intentionally narrow. Generalization beyond this family requires ad
 Peer-reviewed/open literature & Methods, data-use statements, corrections, reported evaluation setup. & Redistribution and text-mining rights remain source-specific.\\
 PMC Open Access Subset \cite{pmcoa} & Reusable full text for eligible articles. & Accessibility does not imply identical reuse rights; use supported retrieval services.\\
 Dataset documentation / archives & Release identity, partitions, corrections, metadata, provenance. & A public page is not proof that all underlying data can be redistributed.\\
-Project-created annotations & Reviewed facts, issue contracts, evidence locators, reference judgments. & Must preserve source licenses and avoid redistributing restricted material.\\
+Project-created records & Artifact-derived facts, issue contracts, evidence locators, silver labels, and mechanically generated reference states. & Must preserve source licenses and avoid redistributing restricted material.\\
 \bottomrule
 \end{tabularx}
 
@@ -211,6 +216,20 @@ No patient-level graph is required. Raw patient images or restricted clinical da
 
 Synthetic fixtures are a third collection used only for conformance testing.
 
+\subsection{Reference tiers: gold, silver, and unscorable}
+The primary benchmark uses evidence tiers rather than expert adjudication.
+
+\begin{tabularx}{\linewidth}{@{}L{28mm}Y Y@{}}
+\toprule
+\textbf{Tier} & \textbf{Admission rule} & \textbf{Permitted use}\\ \midrule
+Artifact-grounded gold & The complete derivation is reproducible from frozen public artifacts: the named evaluation is source-supportedly linked to the exact artifact/membership basis, identity assumptions are explicit, and the issue-specific reference state is deterministically computed. No domain-specific judgment beyond the contract is required. & Primary test/evaluation set. Reference derivation, generator, inputs, hashes, assumptions, and rule version are released where rights permit.\\
+Silver & Labels are proposed by high-precision heuristics, structured metadata, LLM extraction, or weak supervision but are not mechanically sufficient for gold admission. & Training/development, candidate discovery, error analysis. Never reported as gold accuracy.\\
+Reference-unscorable / expert-required & The benchmark builder cannot establish a reproducible reference because evaluation-to-artifact linkage, identity, admissible evidence, or domain interpretation remains unresolved. & Retained in coverage denominators and qualitative failure analysis; excluded from gold correctness claims. This cohort is distinct from a gold case whose correct reference state is \status{UNKNOWN}.\\
+\bottomrule
+\end{tabularx}
+
+A case is not upgraded to gold because an LLM is confident. If the \emph{complete reference derivation}---including the evaluation-to-artifact link and identity assumptions---cannot be reproduced from the frozen artifact bundle and issue-specific reference generator, it is not a primary gold case. A reproducibly justified \status{UNKNOWN} may be gold; an unresolved reference construction is not.
+
 \subsection{Required denominators}
 \begin{tabularx}{\linewidth}{@{}L{31mm}Y@{}}
 \toprule
@@ -219,8 +238,10 @@ Discovered records & Deduplicated identifiers, search frame, query/date, and stu
 Selected studies & All sampled studies, including unresolved eligibility and inaccessible sources.\\
 Accessible sources & Access and permitted-use state; parser success separately reported.\\
 Enumerated evaluations & Evaluations identified in accessible studies; inaccessible papers have unknown evaluation counts, not zero.\\
-Annotated cases & Evaluation--issue--scope cases, including UNKNOWN and CONFLICTING.\\
-Decisively assessable & Cases with sufficient evidence for a positive or negative conclusion at the named boundary.\\
+Structured cases & Evaluation--issue--scope records, including unresolved and conflicting evidence.\\
+Artifact-grounded gold & Cases whose full reference derivation, including evaluation-to-artifact linkage and identity basis, is reproducible from frozen public artifacts and the issue contract. Report the gold state distribution, including any reproducibly justified \status{UNKNOWN}/\status{CONFLICTING} cases.\\
+Silver cases & Weak/LLM/heuristic labels available for training or development but not final correctness claims.\\
+Reference-unscorable / expert-required & Cases retained for coverage analysis because the benchmark cannot establish a defensible reference derivation. Do not merge this cohort with gold \status{UNKNOWN}.\\
 \bottomrule
 \end{tabularx}
 
@@ -276,15 +297,19 @@ Assess the smallest meaningful scopes first, then summarize them using an ordere
 
 A conflicted scope cannot serve as an unqualified positive witness. A clean positive on one input plus a conflict or unknown elsewhere yields a localized warning with residual uncertainty. A whole-boundary negative result requires complete coverage of the scopes relevant to that boundary, but it does \emph{not} reintroduce a requirement to reconstruct unrelated memberships: DM-H01 N1 remains satisfied by any supported evidence that blocks every frozen historical witness as specified in Section~\ref{sec:dmh01}.
 
-\subsection{Source facts versus reference judgments}
-The evaluated method may receive attributed source statements, literal version names, source-local roles, evidence locators, and a frozen issue definition. It must not receive accepted applicability certificates, final statuses, or reference actions.
+\subsection{Method inputs versus reference artifacts}
+The evaluated method may receive the public source corpus, attributed source statements it extracts, literal version names, source-local roles, evidence locators, and the frozen issue definition. It must not receive the withheld mechanically generated reference state or the private mapping file used solely to score the benchmark.
 
-Cross-document identity resolution, alignment of a source-local artifact to the affected artifact, correction sufficiency, issue-specific scope reasoning, and final applicability remain tasks for the evaluated method in the reviewed-evidence track.
+The primary reference is mechanically reproducible \emph{under explicit, source-supported artifact-linkage and identity assumptions}. The reference record must expose the complete derivation from the named evaluation to the exact artifact/membership basis, the source locator that supports that linkage, the identity mapping used, every non-mechanical transcription or preparation step, and the deterministic issue computation. Hashing a manifest proves which bytes were used; it does not by itself prove that the manifest corresponds to the reported evaluation.
+
+Human handling is permitted when it is transparent and non-adjudicative---for example, transcribing an explicit evaluation identifier, recording a source locator, or checking a deterministic join. The evaluated extractor's own uncertain mapping must never be reused to generate its gold answer. Cross-document identity resolution, mapping a source mention to the relevant artifact, retrieving the required evidence, and producing the final applicability state remain tasks for the evaluated pipeline.
+
+If a conclusion depends on medical/domain interpretation outside the frozen contract, the case is marked \status{REQUIRES\_EXPERT\_REVIEW} or unresolved. Such cases remain evidence about coverage limits but are excluded from primary gold correctness metrics.
 
 \section{First issue-specific contract: DM-H01}
 \label{sec:dmh01}
 \subsection{Scientific proposition}
-The first issue contract concerns persistence of documented historical overlap witnesses. Let $W_0$ be a pinned set of historical oriented image-pair witnesses, each with partition identity, evidence, metadata version, and identity limitations. When the source relationship is symmetric (for example, two images documented as representing the same underlying lesion for purposes of the historical split concern), the registry stores \emph{both} orientations $(a,b)$ and $(b,a)$. It must not manufacture unreviewed transitive links. A deliberately directional issue would require a different issue contract.
+The first issue contract concerns persistence of documented historical overlap witnesses. Let $W_0$ be a pinned, reproducibly generated or source-enumerated set of historical oriented image-pair witnesses, each with partition identity, evidence, metadata version, identity limitations, and artifact hash where available. When the source relationship is symmetric (for example, two images documented as representing the same underlying lesion for purposes of the historical split concern), the registry stores \emph{both} orientations $(a,b)$ and $(b,a)$. It must not manufacture unreviewed transitive links. A deliberately directional issue would require a different issue contract.
 
 For a selected evaluation pair $s$, let $D_{e,s}$ and $T_{e,s}$ denote the final development and test memberships at the chosen claim target.
 
@@ -303,7 +328,7 @@ This proposition asks whether at least one \emph{documented historical witness} 
 P1: witness presence & An identified $W_0$ witness has supported membership on the development and test sides of the linked final use pair, matched to the evaluation and claim target. & Same dataset family, same split ratio, or ancestral use without final membership is insufficient.\\
 P2: reported inheritance & The paper explicitly reports unchanged use of exactly identified historical partitions, and the anchor evidence establishes a witness in that exact partition pair. & ``Official split'', an unspecified subset, or a citation alone is insufficient.\\
 N1: witness exclusion & For every oriented witness in frozen $W_0$, supported evidence establishes absence of at least one required membership under validated identity mapping and the named target. & Missing membership is not absence; checking only some witnesses cannot support exclusion.\\
-N2: correction & The assessed evaluation uses an exactly identified correction, and an independently checked postcondition establishes exclusion of $W_0$ for the relevant scope. & A correction's existence, citation, or ``cleaned'' wording alone is insufficient.\\
+N2: correction & The assessed evaluation uses an exactly identified correction, and a reproducibly checked postcondition establishes exclusion of $W_0$ for the relevant scope. & A correction's existence, citation, or ``cleaned'' wording alone is insufficient.\\
 \bottomrule
 \end{longtable}
 
@@ -322,100 +347,144 @@ An assertion that all covered use pairs are non-overlapping must be compared wit
 
 Recorded identifiers are not automatically biological identity. The dermatology investigation reports missed duplicates assigned different lesion identifiers \cite{abhishek2025}. Therefore a non-overlap check on recorded lesion IDs supports only an identifier-level statement unless stronger identity evidence exists.
 
-\section{Benchmark construction and independent annotation}
+\section{Benchmark construction and reference generation}
 \label{sec:benchmark}
 \subsection{Reference layers}
-Store three layers independently:
+Keep four layers separate:
 \begin{enumerate}
-\item source facts and evidence locators;
-\item reference interpretation of applicability/separation;
-\item acceptable next actions for the review task.
+\item raw public sources and immutable artifact pointers;
+\item structured source-local facts produced by deterministic parsing or extraction candidates;
+\item withheld artifact-grounded reference states produced by the reference generator;
+\item silver labels and reference-unscorable/expert-required cases, which must never be silently promoted to gold.
 \end{enumerate}
-An ambiguous fact may remain ambiguous. Do not force a decisive label to create class balance.
 
-\subsection{Independent annotation}
-Every final-test case is independently double-annotated without access to system predictions or the other reviewer's initial judgment. Preserve initial disagreements and adjudication reasons. A rule author must not be the sole reference assessor. If adequate independent review is unavailable, label the result as a developer-annotated pilot rather than a final benchmark.
+\subsection{Reference derivation as a provenance chain}
+For every proposed gold case, construct a withheld derivation record of the form
+\[
+\begin{aligned}
+\text{reported evaluation} &\rightarrow \text{source-supported artifact link}\\
+&\rightarrow \text{identity/membership basis}\\
+&\rightarrow \text{issue computation} \rightarrow \text{reference state}.
+\end{aligned}
+\]
+The reference generator must not skip the middle of this chain. An artifact hash authenticates the chosen file but does not establish why that file belongs to the named evaluation. The record therefore includes: evaluation locator; linkage source/locator; literal identifiers or configuration references; artifact/version hash; identity mapping/version; preparation/transcription steps; deterministic computation inputs; and final scoped state. This derivation is withheld from evaluated methods but released with the benchmark where rights permit.
+
+\subsection{Artifact-grounded gold admission}
+A case is eligible for the primary gold set only when the \emph{entire reference derivation} is inspectable and reproducible. All of the following must hold:
+\begin{enumerate}
+\item the issue contract is frozen and sufficiently specific for the claim target;
+\item the reported evaluation is identified by a stable study/evaluation key and source locator;
+\item a source-supported linkage establishes which exact artifact, configuration, manifest, or membership basis corresponds to that evaluation and claim target; if several plausible artifacts remain and the linkage cannot be resolved, the case is reference-unscorable rather than gold;
+\item the relevant public artifacts can be identified and hashed or otherwise version-pinned;
+\item the identity mapping and its limitations are explicit and versioned;
+\item the reference proposition can be evaluated by deterministic code from explicit memberships/identifiers/structured evidence or an equivalently machine-checkable source condition;
+\item every non-mechanical preparation step needed to construct the reference is disclosed, and reproducing the final state does not require a new medical or clinical judgment;
+\item the reference generator and all non-restricted inputs needed to reproduce the state are versioned.
+\end{enumerate}
+
+A source sentence such as ``we used the official test split'' may support a reported-setup linkage, but it is not by itself a gold label. Gold status arises only when that source statement is connected to the frozen artifact basis, identity assumptions, and issue contract through an inspectable derivation. Native configuration that explicitly names the evaluation and exact manifest is stronger linkage evidence than an association inferred from similar names; either route must state its assumptions rather than hiding them in a structured file.
+
+\subsection{Silver data and weak supervision}
+Training/development data may be built from high-precision patterns, structured repository/configuration metadata, citation heuristics, or LLM-proposed structured extraction. These records are explicitly labeled \status{SILVER}. Spot checks may be used for engineering quality control, but no medical-expert adjudication is required for the core benchmark and silver data are not used as the primary held-out ground truth.
+
+If enough artifact-grounded slot labels can be derived automatically, component tasks may additionally report role/version/split extraction metrics. Otherwise the principal correctness claim remains end-to-end applicability on artifact-grounded gold cases.
+
+\subsection{Gold uncertainty versus reference-construction uncertainty}
+Two forms of uncertainty must remain separate.
+
+\textbf{Assessment uncertainty} is a legitimate reference outcome when the frozen admissible evidence channel reproducibly establishes that neither polarity is justified. Such a case may enter gold with reference state \status{UNKNOWN}. For example, a uniquely identified execution manifest may explicitly omit a contract-required field, so the evidential incompleteness itself is reproducible. Failure of a parser or search procedure to find an informative sentence does \emph{not} establish gold \status{UNKNOWN}.
+
+\textbf{Reference-construction uncertainty} means the benchmark builder cannot determine a reliable reference state---for example, because two manifests plausibly correspond to the result and no source-supported linkage resolves which one was used. This case is \status{REFERENCE\_UNSCORABLE}, not gold \status{UNKNOWN}. A domain-dependent case is \status{REQUIRES\_EXPERT\_REVIEW}. Both remain in coverage/failure accounting but outside correctness metrics.
+
+Gold \status{CONFLICTING} likewise requires a reproducible admission route: materially opposed admissible evidence must address the same proposition, target, scope, and snapshot. If the benchmark cannot establish whether the sources are actually comparable, the case is reference-unscorable rather than gold \status{CONFLICTING}.
+
+Do not force a label when the complete derivation cannot be established. Record the excluded case, the unresolved linkage/fact, what artifact would resolve it, and whether the limitation arose from access, identity resolution, missing execution linkage, incomparable evidence, or domain judgment.
+
+\subsection{Class-specific gold admission}
+Gold states are admitted only through demonstrated reference routes:
+\begin{itemize}
+\item \status{APPLIES}: a fully linked artifact basis deterministically satisfies the positive issue contract.
+\item \status{NOT\_APPLICABLE}: a fully linked artifact basis deterministically satisfies the negative/exclusion contract for the named scope and boundary.
+\item \status{UNKNOWN}: the frozen admissible evidence channel itself reproducibly lacks a contract-required fact, so neither polarity is justified. Retrieval failure by the evaluated method or by the benchmark builder is not sufficient.
+\item \status{CONFLICTING}: reproducible admissible evidence supports both polarities for the same proposition, target, scope, and snapshot.
+\end{itemize}
+If no real case qualifies for one of these routes, that class is absent from the gold test and is reported as such.
 
 \subsection{Diversity and holdouts}
 Report studies, evaluation setups, issue mechanisms, corrections, dataset families, and reasoning patterns separately. Many cases derived from one historical issue do not constitute many independent issue mechanisms.
 
-Hold out all versions of a study together. Where real data permit, create compositional challenge cases involving transformation plus role, partial correction across multiple inputs, or contradictory evidence. Early feasibility cases used to refine rules are development material and cannot later be described as untouched tests.
+Hold out all versions of a study together. Maintain a study-level \emph{development-validation} collection for prompt design, thresholds, model choice, error analysis, and ablations. Freeze a separate final gold test set before those choices are finalized, and do not inspect final-test labels or outputs until the pipeline and decision rules are frozen. Early feasibility cases used to refine rules are development material and cannot later be described as untouched tests. Where real artifacts permit, include compositional challenge cases involving transformation plus role, partial correction across multiple inputs, or contradictory evidence.
 
 \section{Comparative evaluation}
 \label{sec:evaluation}
-\subsection{Three evaluation tracks}
-\textbf{R -- reviewed-evidence assessment.} All methods receive the same independently reviewed source facts and evidence bundle, issue definition, output schema, and abstention options, but not final labels. This tests assessment logic.
+\subsection{Evaluation tracks}
+\textbf{C -- conformance.} Synthetic certificate inputs exercise the deterministic evidence-state and multi-scope composition contract. This validates bookkeeping only.
 
-\textbf{E -- automatic source-to-assessment.} Methods receive the same raw permitted evidence corpus and comparable retrieval/model budgets. Held-out extraction errors are not repaired with gold facts.
+\textbf{A -- artifact-grounded assessment.} Methods receive the same frozen structured/public artifact bundle needed to resolve the issue but not the withheld reference state. This isolates entity/scope alignment and deterministic assessment from full-text retrieval noise.
 
-\textbf{H -- human-reviewed workflow.} Measure the actual production and consumption process, including curation, correction, adjudication, maintenance, and reader verification. This is not automatic accuracy.
+\textbf{E -- end-to-end source-to-assessment.} Methods receive the same raw permitted paper/document/repository corpus and comparable retrieval/model budgets. They must recover dataset usage, role, release/split/component identity, evidence locators, and the final scoped state. This is the primary ML evaluation.
 
-A certificate-supplied composition condition may be used for conformance testing, but it cannot be presented as evidence that the method performed the substantive applicability judgment.
+\textbf{S -- silver extraction development.} Weakly supervised or LLM-proposed labels may be used for training, ablation, and error analysis. Results on S are not substituted for artifact-grounded gold evaluation.
 
 \subsection{Strong comparators}
-\begin{tabularx}{\linewidth}{@{}L{39mm}Y@{}}
+\begin{tabularx}{\linewidth}{@{}L{41mm}Y@{}}
 \toprule
 \textbf{Comparator} & \textbf{Purpose}\\ \midrule
-Registry + checklist + competent reviewer & Principal practical baseline. Searchable, source-linked, and given the same evidence access.\\
-Direct LLM assessment & Same evidence bundle, issue definition, output schema, abstention options, and comparable budget; no explicit rule engine.\\
-Flat structured assessment & Scope-aware record/checklist without graph storage. Tests whether the graph representation is actually necessary.\\
-Alias/rule extraction & Low-cost extraction baseline for roles, releases, components, and corrections.\\
-Reachability-only warnings & Diagnostic ablation only; not the main novelty comparison.\\
+Always-UNKNOWN sanity baseline & Returns \status{UNKNOWN} for every case. It should have zero unsupported decisive outputs but poor decisive coverage/applicable-case recall; it prevents H1 from being ``won'' by trivial abstention.\\
+Alias/regex/rule pipeline & Low-cost non-ML baseline for dataset mentions, roles, releases, splits, and evidence patterns.\\
+Direct LLM structured assessment & Same raw evidence access, issue definition, output schema, abstention option, and comparable budget; no explicit evidence graph/rule decomposition.\\
+LLM/transformer extraction + deterministic kernel & Main structured ML family: model extracts provenance/evidence; rules determine what those facts justify.\\
+Flat structured representation & Same extracted facts and rules without graph storage. Tests whether graph representation/context adds value.\\
+Graph-context resolver/retriever & Optional ablation if the pilot reveals ambiguous aliases, versions, citations, or lineage paths that textual context alone does not resolve reliably.\\
+Reachability-only warning & Diagnostic ablation only; demonstrates why dependency is not equivalent to applicability.\\
 \bottomrule
 \end{tabularx}
 
-\subsection{Scoring unit and duplicate normalization}
+\subsection{Primary scoring unit}
 The canonical technical atom is
 \[
 a=(e,i_{version},u_{dev},u_{test},target,snapshot).
 \]
-The practical unit is one review decision per evaluation. Multiple affected atoms cannot inflate evaluation-level practical credit.
+The primary held-out outcome is the exact scoped applicability state for each artifact-grounded gold atom, together with a valid evidence path/locator set where the contract requires one. Because status is many-to-one with respect to provenance, final-state correctness is \emph{not sufficient}: where the gold derivation exposes these slots, score the evaluation-to-artifact link, development/test roles, exact release/split or configuration identifiers, identity basis, and whether each cited locator actually supports the asserted use rather than merely mentioning the artifact.
 
-For scientific scoring, semantically identical repeated answers for the same atom are collapsed to one candidate answer and duplication is reported separately. Repetition never earns additional true positives. Incompatible answers for one atom remain invalid. Same-status outputs with materially different evidence, qualification, or action are not automatically merged; a frozen, reference-blind equivalence rule is required.
+For scientific scoring, semantically identical repeated answers for the same atom are collapsed to one candidate answer and duplication is reported separately. Repetition never earns additional true positives. Incompatible answers for one atom remain invalid. Same-status outputs with materially different evidence or scope are not automatically merged.
 
-Strict one-row output-contract compliance remains a separate engineering metric.
+\subsection{Accuracy, abstention, and evidence measures}
+Report exact status accuracy and a confusion matrix only across gold states for which a real admission route is represented in the frozen test set. If there are no gold \status{UNKNOWN} or \status{CONFLICTING} cases, report that absence rather than implying four-class evaluation. For reference-applicable cases report warning precision and applicable-case recall. Interpret unsupported-decision error jointly with decisive coverage (or compare methods at matched decisive coverage); abstention on an applicable case counts against recall.
 
-\subsection{Primary action outcome}
-Independent reviewers predefine acceptable action--scope--rationale combinations. Action families include: qualify/recheck; request targeted evidence; take no action for DM-H01 while preserving broader uncertainty; or resolve conflict/defer.
-
-A technically correct narrow negative does not earn practical-value credit if its explanation falsely reassures the user about general separation or overall dataset quality.
-
-The micro-pilot's descriptive primary measure is the fraction of reference-scorable evaluations receiving an acceptable scoped action and rationale within a proposed 15-minute reader budget. Timeouts remain in the denominator; the pilot calibrates this budget rather than validating it.
-
-\subsection{Accuracy and uncertainty measures}
-For reference-applicable cases report warning precision and applicable-case recall. Abstention on an applicable case counts against recall. A decisive warning on a reference-UNKNOWN case is unsupported rather than proof of false biological reality.
+Keep gold correctness and non-gold verification outcomes in separate denominators. On a reference-unscorable case, a decisive output is counted as a contract/evidence failure only when its submitted evidence can itself be mechanically shown to violate the frozen contract. If the output simply cannot be verified by the available reference procedure, mark it \status{UNVERIFIED}; do not silently convert ``not verified'' into ``wrong.''
 
 \begin{align*}
-\mathrm{Precision}_A &= \frac{\#\text{correct scoped warnings}}{\#\text{all scoped warnings}},\\
-\mathrm{Recall}_A &= \frac{\#\text{correct scoped warnings}}{\#\text{reference-applicable cases}}.
+\mathrm{Precision}_A &= \frac{\#\text{correct scoped APPLIES outputs}}{\#\text{all scoped APPLIES outputs}},\\
+\mathrm{Recall}_A &= \frac{\#\text{correct scoped APPLIES outputs}}{\#\text{gold APPLIES cases}}.
 \end{align*}
 
-Also report status confusion, false reassurance, mistaken mitigation/exclusion, scope correctness, conflict handling, actionable-UNKNOWN rate, missing-case rate, evidence fidelity, counts, and uncertainty. Small samples remain descriptive. Grouped studies and repeated issue instances must not be treated as independent Bernoulli trials merely to tighten intervals \cite{nistbinomial}.
+Also report evidence-locator fidelity, evaluation-to-artifact linkage accuracy, entity/release/split resolution success where artifact-derived slot labels exist, role accuracy, identity-basis accuracy, supporting-locator precision (a locator must establish the asserted use, not merely mention the artifact), unsupported decisive-output rate, decisive coverage, actionable-UNKNOWN rate, gold-eligibility/coverage rate, reference-unscorable rate, parser/source failures, runtime/cost, counts, and uncertainty. Small samples remain descriptive. Grouped studies and repeated issue instances must not be treated as independent Bernoulli trials merely to tighten intervals \cite{nistbinomial}.
+
+\subsection{ML error analysis}
+Every end-to-end error should be assigned, when possible, to a failure stage: dataset mention/use classification, role extraction, entity resolution, evaluation-to-artifact linkage, version/split resolution, correction linkage, evidence retrieval, scope alignment, deterministic contract logic, or output serialization. This decomposition is an important analysis contribution because it shows where the tested learned methods add value, where rules suffice, and where public evidence remains inadequate; categorizing errors alone does not prove that a learned method is required.
 
 \section{Usefulness and cost}
 \label{sec:usefulness}
-\subsection{What usefulness means here}
-The project is useful only if it helps a reviewer make a better scoped decision, obtain the needed evidence more efficiently, avoid an unnecessary recheck, or avoid unsupported reassurance. A polished visualization or a technically correct status label is not sufficient evidence of usefulness.
+\subsection{What usefulness can be claimed in the solo study}
+The core study does not claim that clinicians, reviewers, or researchers make better decisions because no expert user study is required. Its directly testable usefulness is narrower: automatically recover experiment-level provenance that would otherwise require manual source chasing; distinguish artifact-verifiable applicability from blanket dataset-level warnings; expose the exact missing artifact when a conclusion cannot be made; and quantify how much of the task is publicly recoverable.
+
+A downstream user-facing value claim therefore remains a hypothesis until external users are studied. The project may still be useful as research infrastructure if it provides reproducible evidence records, a benchmark, and reliable automated provenance reconstruction.
 
 \subsection{UNKNOWN should be actionable}
 An UNKNOWN report names the missing artifact or fact, explains why it would resolve the proposition, records whether it was found in searched sources, gives a bounded next check, and provides a fallback when the artifact is unavailable. ``Inspect the manifest'' is not actionable if no manifest can be located.
 
-\subsection{Full effort accounting}
-Measure incremental cost against a maintained registry/checklist, not against zero curation. Keep one-time setup, shared issue work, per-assessment work, reader verification, corrections, and recurring maintenance separate by role.
+\subsection{Effort and automation accounting}
+Measure the effort that the solo project can actually observe: source discovery time, artifact/version resolution time, scripting/curation time, model inference cost, graph/retrieval cost, and manual engineering spot-check time. Do not imply domain-expert time savings that were not measured.
 
 For a declared common cost unit and $r$ comparable reuses,
 \[
 \Delta C(r)=\Delta C_0+\Delta M+r\,\Delta c.
 \]
-A net saving requires $\Delta C(r)<0$ while preserving acceptable decision quality. Engineer-hours and domain-expert-hours remain separate unless an explicit conversion is justified.
+This model can be used to estimate when one-time curation becomes worthwhile, but any claimed human-workflow saving must be labeled hypothetical unless independently measured.
 
-\subsection{Overreliance check}
-Use fictional or clearly simulated reports containing unsupported conclusions or incorrect scope to test whether users challenge them. Do not seed false public warnings about real researchers. Evidence links do not by themselves prove that users inspect evidence.
-
-\subsection{Reader-comparison safeguards}
-Timed comparisons must separate reference construction from reader evaluation. A reader must not evaluate a case whose reference answer they created or adjudicated. For a given case, use different readers for the registry/checklist and MedDataTrace-style conditions, counterbalance condition assignment across cases, and do not expose the same reader to the same case in both timed conditions. The evidence bundle, issue definition, task instructions, and time budget remain frozen across conditions.
-
-Reference annotators and supposedly naive timed readers are different roles. If suitable independent readers are unavailable, report descriptive case comparisons and preparation/verification costs only; do not claim a reader-efficiency advantage. Small reader comparisons remain feasibility evidence, not a powered effectiveness trial.
+\subsection{Optional future external validation}
+If domain experts or suitable research users later become available, a reader study may be added as a separate validation layer. It is not a prerequisite for the benchmark, ML experiments, or project completion. Any such future study must separate reference construction from reader evaluation, prevent prior exposure to the same cases across conditions, and report preparation costs as well as reader time.
 
 \section{System architecture and graph model}
 \label{sec:architecture}
@@ -425,11 +494,11 @@ The authoritative representation is a versioned evidence ledger. Graph storage i
 \begin{center}
 \begin{tikzpicture}
 \node[block,text width=136mm] (sources) at (0,0) {Permitted sources + acquisition/rights manifest};
-\node[block,text width=136mm] (facts) at (0,-1.05) {Candidate extraction $\rightarrow$ validation/review $\rightarrow$ versioned evidence records};
+\node[block,text width=136mm] (facts) at (0,-1.05) {Candidate extraction $\rightarrow$ validation $\rightarrow$ versioned evidence records};
 \node[block,text width=63mm] (rules) at (-3.6,-2.4) {Storage-neutral assessment kernel\\scope, evidence obligations, composition};
 \node[block,text width=63mm] (projection) at (3.6,-2.4) {Optional Neo4j projection\\lineage queries and navigation};
-\node[block,text width=136mm] (reports) at (0,-3.7) {Templated review reports + evidence + unresolved checks};
-\node[block,text width=136mm] (eval) at (0,-4.8) {Evaluation harness: registry/checklist, direct LLM, extraction baselines};
+\node[block,text width=136mm] (reports) at (0,-3.7) {Templated evidence reports + applicability state + unresolved checks};
+\node[block,text width=136mm] (eval) at (0,-4.8) {Evaluation harness: rules, direct LLM, structured ML extraction, graph-context ablations};
 \draw[flow] (sources)--(facts);
 \draw[flow] (facts.south -| rules.north)--(rules.north);
 \draw[optional] (facts.south -| projection.north)--(projection.north);
@@ -453,8 +522,8 @@ DatasetComponent & Images, annotations, metadata, or split definitions that can 
 Transformation & Typed operation linking input/output components, with scope and issue-specific preservation/removal evidence.\\
 SourceCohort / Institution & Aggregate provenance entities; no patient nodes are required.\\
 DatasetIssue & Versioned documented finding with mechanism, affected scope, source, and sufficient-evidence contract.\\
-Assertion / Evidence & Qualified claim plus source locator, polarity, review state, and temporal scope.\\
-Assessment / ReviewEvent & Versioned result, evidence path, rationale, human disagreement, and supersession history.\\
+Assertion / Evidence & Qualified claim plus source locator, polarity, validation state, and temporal scope.\\
+Assessment / ReviewEvent & Versioned result, evidence path, rationale, reference tier, and supersession history.\\
 \bottomrule
 \end{longtable}
 
@@ -464,7 +533,15 @@ Consequential graph relationships should be justified by explicit assertion/evid
 The graph naturally represents recursive lineage, component-level derivation, experiment-specific roles, and downstream issue navigation. It is particularly useful for queries that follow multiple transformations and then return to experiments. However, recursive SQL or adjacency lists can represent the same facts. The project should demonstrate graph value through maintainability, query expressiveness, or workflow quality, not claim automatic accuracy gains from Neo4j.
 
 \subsection{ML responsibilities}
-ML is used for evidence-qualified information extraction: dataset-use detection, role classification, release/split resolution, component identification, correction linkage, and evidence retrieval. Start with rules/aliases, then constrained LLM extraction, then a supervised model only if the annotation volume and baseline gap justify it.
+ML is central to the automatic track. The target transformation is
+\[
+\text{raw scientific artifacts}\rightarrow\text{structured experiment provenance}\rightarrow\text{deterministic issue assessment}.
+\]
+The ML layer may include: dataset mention/use classification; training/validation/testing/pretraining role extraction; canonical dataset/entity resolution; release/version/split/component resolution; correction and transformation linkage; and retrieval/ranking of evidence passages. Begin with deterministic aliases/rules, add a direct constrained-LLM baseline, then evaluate learned biomedical/scientific text models or embedding/reranking approaches only where the pilot reveals enough examples and a measurable baseline gap.
+
+Silver labels may support training. Prompt design, thresholds, architecture/model choice, and ablations use study-level development-validation data only. A separate final artifact-grounded test set remains untouched until those choices and the assessment policy are frozen. Model confidence never creates a scientific fact; low-confidence or unresolved extraction remains explicit.
+
+Graph context may be used as an ML feature or retrieval constraint when citations, aliases, derived datasets, or lineage relations help resolve entities. GNN/link prediction is optional and, if tested, may only propose candidate relations for verification rather than insert unsupported provenance as fact.
 
 GraphRAG is optional and explanation-only: it may answer ``why is this case flagged?'' by retrieving the accepted evidence path. It cannot create new scientific facts or override the deterministic assessment.
 
@@ -484,14 +561,16 @@ GraphRAG is optional and explanation-only: it may answer ``why is this case flag
 \req{R06} & Validate positive and negative evidence obligations independently; localize mixed/conflicting inputs.\\
 \req{R07} & Keep issue applicability and separation dimensions as separate propositions.\\
 \req{R08} & Every consequential output resolves to evidence locators, rule version, scope, and claim target.\\
-\req{R09} & Independently double-annotate all final-test cases without exposing predictions.\\
-\req{R10} & Include strong, evidence-matched registry/checklist, flat-record, and direct-assessment comparisons.\\
+\req{R09} & Admit a case to the primary gold test set only when the complete reference derivation is reproducible: evaluation-to-artifact linkage, identity assumptions, frozen artifacts, and the issue-contract computation are all inspectable.\\
+\req{R10} & Include strong, evidence-matched rule/alias, direct-LLM, and flat-structured comparisons; test graph context only where justified.\\
 \req{R11} & Report applicable-case recall, false reassurance, unsupported decisive outputs, counts, and uncertainty together.\\
-\req{R12} & Measure effort by role and distinguish preparation, consumption, adjudication, and maintenance.\\
+\req{R12} & Measure observable solo-project effort: acquisition, artifact resolution, curation, model/runtime cost, correction, and maintenance; do not infer unmeasured expert savings.\\
 \req{R13} & Keep the evidence ledger authoritative; graph projections are reproducible and replaceable.\\
-\req{R14} & Publish only reviewed, permitted material; keep patient data and arbitrary code execution out of scope.\\
-\req{R15} & Label synthetic conformance, reviewed-input, automatic, and human-reviewed results separately.\\
-\req{R16} & Allow research completion without a hosted platform, GraphRAG, or fine-tuned model.\\
+\req{R14} & Publish only permitted material with source/rights metadata; keep patient data and arbitrary code execution out of scope.\\
+\req{R15} & Label synthetic conformance, artifact-grounded gold (including any gold UNKNOWN/CONFLICTING), silver/weakly supervised, automatic end-to-end, reference-unscorable, inaccessible, and expert-required cases separately.\\
+\req{R16} & Allow research completion without a hosted platform, GraphRAG, fine-tuned model, expert annotator panel, or user study.\\
+\req{R17} & Never use LLM confidence or developer opinion as gold ground truth; cases requiring domain interpretation beyond the frozen contract remain non-gold.\\
+\req{R18} & Split by study into development/training, development-validation, and a separate final gold test set. Use validation for prompts, thresholds, model choice, and ablations; keep the final test untouched until choices are frozen. Early rule-refinement cases remain development material.\\
 \bottomrule
 \end{longtable}
 
@@ -511,50 +590,53 @@ Usability & Status is expressed in text, not color alone; UNKNOWN includes a con
 
 \section{Roadmap and decision gates}
 \label{sec:roadmap}
-The roadmap is evidence-gated rather than a fixed completion promise. The first measured quantity is effort to create an independently defensible case, including failed retrieval attempts.
+The roadmap is evidence-gated rather than a fixed completion promise. The first measured quantity is whether a real downstream case can be converted into an artifact-grounded reference without expert adjudication, and how much work that requires.
 
 \begin{longtable}{@{}L{15mm}L{50mm}L{47mm}L{38mm}@{}}
 \toprule
 \textbf{Stage} & \textbf{Work package} & \textbf{Gate evidence} & \textbf{Next step if justified}\\ \midrule
 \endfirsthead
 \toprule\textbf{Stage} & \textbf{Work package} & \textbf{Gate evidence} & \textbf{Next step if justified}\\ \midrule\endhead
-P0 & Freeze issue contract, claim target, discovery frame, evidence budget, and reviewer roles. & Observable task, lawful sources, independent review route, pinned historical evidence. & Six-study micro-pilot.\\
-P1 & Six-study workload calibration; then a 20--30-study naturalistic sample if warranted. & Recoverability denominators, contrasting cases or their absence, disagreement, effort by role. & Freeze/narrow task and forecast annotation.\\
-P2 & Stabilize evidence contracts; independent development annotation; competitive baselines. & Reproducible difficult cases that are not merely lookup. & Freeze benchmark/evaluation configuration.\\
-P3 & Run reviewed-evidence and automatic comparisons; compositional holdouts where supported. & Interpretable quality--effort results including recall and false reassurance. & Proceed, simplify, or stop platform expansion.\\
-P4 & Small user feasibility study and maintenance/reuse analysis. & Real decision relevance and credible benefit/cost hypothesis. & Optional graph UI and workflow iteration.\\
-P5 & Release public-safe benchmark, assessment kernel, baseline outputs, limitations, and evidence-driven conclusion. & Reproducible package and rights review. & GraphRAG or broader domains only with separate justification.\\
+P0 & Pin DM-H01 issue artifacts, $W_0$, identity policy, claim target, discovery frame, evidence budget, and deterministic reference generator. Complete at least one real reference derivation from a named evaluation through source-supported artifact linkage, identity mapping, witness computation, and scoped result. & Reproducible \emph{complete} reference derivation from public artifacts; every non-mechanical preparation step disclosed; lawful source handling. & Six-study micro-pilot.\\
+P1 & Six-study feasibility/calibration. Classify every case as artifact-gold, silver-only, reference-unscorable, inaccessible, or expert-required; distinguish gold \status{UNKNOWN} from unscorable references. & Gold eligibility/state distribution, linkage failure causes, recoverability denominators, recurring extraction tasks, real effort. & Freeze/narrow task; decide whether enough material exists for ML.\\
+P2 & Build extraction corpus using artifact-derived labels where available plus explicitly marked weak/LLM silver data; create rules and direct-LLM baselines. & Study-level split, reproducible corpus, meaningful non-ML baseline, sufficient task volume. & Train/evaluate learned extraction/resolution models if justified.\\
+P3 & Run end-to-end ML comparisons and component error analysis on frozen artifact-grounded held-out cases. & Status/evidence accuracy, abstention safety, provenance-resolution errors, cost. & Proceed, simplify, or pivot.\\
+P4 & Add Neo4j projection and graph-context experiments only if recursive lineage/entity ambiguity appears consequential. & Measurable retrieval/resolution/maintainability benefit over flat representation. & Optional graph UI / GraphRAG explanation.\\
+P5 & Release public-safe benchmark, reference generator, assessment kernel, baseline/model outputs, limitations, and evidence-driven conclusion. & Reproducible package and rights review. & Broader domains or optional expert validation only with separate justification.\\
 \bottomrule
 \end{longtable}
 
 \subsection{Continuation rules}
-\textbf{Continue the method study} if real cases require consequential cross-document distinctions and independent judgments are feasible. \textbf{Simplify to a registry} if a flat curated record supports the same decisions at lower cost. \textbf{Narrow the claim} if only one issue mechanism or dataset family is recoverable. \textbf{Stop platform expansion} if evidence is mostly unrecoverable, independent labeling is unavailable, or unsupported warnings cannot be controlled.
+\textbf{Continue the ML method study} if the pilot yields enough artifact-grounded cases and recurring extraction/resolution work that is nontrivial for rules. \textbf{Simplify} if deterministic parsing solves most cases. \textbf{Pivot to a provenance/coverage benchmark} if useful public-evidence findings exist but gold applicability cases are sparse. \textbf{Try another issue mechanism} if DM-H01 lacks public machine-checkable artifacts. \textbf{Stop platform expansion} if public evidence is mostly unrecoverable or unsupported decisive outputs cannot be controlled.
 
 \section{Six-study pilot operating procedure}
 \label{sec:pilot}
 \subsection{Discovery frame and selection}
 Use references 41--64 identified in the primary DermaMNIST investigation as the bounded initial candidate frame; they are examples selected by the issue authors, not a representative sample of medical AI \cite{abhishek2025}. Copy and deduplicate the complete candidate list, retain version links and unresolved eligibility, and freeze the list before examining applicability.
 
-Assign each unique study a stable key (normalized DOI, otherwise arXiv root ID, otherwise normalized title/year). Order by a frozen deterministic hash and inspect the first six. Do not replace inaccessible, citation-only, or unresolvable studies to manufacture assessable cases.
+Assign each unique study a stable key (normalized DOI, otherwise arXiv root ID, otherwise normalized title/year). Order by a frozen deterministic hash and inspect the first six. Do not replace inaccessible, citation-only, unresolvable, or expert-required studies to manufacture gold cases.
 
 \subsection{Work budget for calibration}
-\begin{tabularx}{\linewidth}{@{}L{28mm}Y@{}}
+\begin{tabularx}{\linewidth}{@{}L{29mm}Y@{}}
 \toprule
 \textbf{Step} & \textbf{Proposed record and stopping rule}\\ \midrule
 Capture & Initial cap: 15 minutes per study for lawful full text, supplements, and explicitly linked artifacts. Log every attempted route and access/right boundary.\\
-Evidence construction & Additional cap: 30 minutes per study for facts and input enumeration. Incomplete inventories remain incomplete.\\
-Independent judgments & Two reviewers work separately on each enumerated evaluation; log time, evidence, interpretation, action, and abstention.\\
-Baseline comparison & Same frozen evidence bundle for registry/checklist and MedDataTrace-style assessment.\\
-Effort accounting & Retrieval, first/second annotation, adjudication, report preparation, reader verification, and correction time logged separately by role.\\
-Reforecast & After six studies, publish all denominators, unresolved cases, disagreement, and observed work before deciding whether to expand.\\
+Evidence reconstruction & Additional cap: 30 minutes per study for dataset mentions, use roles, version/split/component candidates, repositories, manifests, and evidence locators. Incomplete inventories remain incomplete.\\
+Reference-tier assignment & Apply frozen admission rules to classify each evaluation/atom as ARTIFACT\_GOLD, SILVER\_ONLY, UNRESOLVED, EXPERT\_REQUIRED, or INACCESSIBLE. No case is upgraded by confidence alone.\\
+Gold generation & For ARTIFACT\_GOLD cases, first freeze the complete evaluation-to-artifact derivation record, then run the reference generator against pinned artifacts and store the withheld output/hash. Gold UNKNOWN/CONFLICTING must cite their class-specific admission basis.\\
+Baseline comparison & Run the rule/alias baseline and direct-LLM structured baseline on the same permitted evidence.\\
+Effort accounting & Log acquisition, artifact resolution, scripting, extraction/model inference, graph/retrieval work if any, and engineering correction time.\\
+Reforecast & After six studies, publish all denominators, gold eligibility/state distribution, reference-unscorable/expert-required cases, failures, recurring ML tasks, and observed effort before deciding whether to expand.\\
 \bottomrule
 \end{tabularx}
 
 \subsection{Activation requirements}
-Before reference labeling: assign independent reviewers; pin and independently check $W_0$ and historical partition identity; record identity qualifications and transformation policy; freeze the candidate list and selection rule; freeze the primary review task and evidence-search budget. Source collection can begin while personnel logistics are completed, but scientific labels require the relevant gates.
+Before generating primary gold labels: pin and hash or otherwise version-identify the DM-H01 witness/artifact basis; verify that the reference generator reproduces the intended witness-persistence proposition from those public artifacts; complete at least one full evaluation-to-artifact reference derivation and reproduce it from a clean checkout/environment using the released instructions; record every source-supported linkage, identity qualification, transformation policy, and non-mechanical preparation step; freeze the candidate list and selection rule; freeze the evidence-search budget and gold-admission criteria, including class-specific routes for gold \status{UNKNOWN}/\status{CONFLICTING}. If the necessary historical artifacts cannot be obtained or source-supportedly tied to the reported evaluation and issue contract, DM-H01 is not activated as a gold benchmark issue and the project must use a different issue or a provenance-only pilot.
+
+No expert reviewer, second annotator, or timed reader is required to activate the core study. Expert validation is optional future work and must be reported as such if later added.
 
 \subsection{What the micro-pilot can and cannot establish}
-Six studies calibrate workload and reveal failure modes. They cannot establish general effectiveness, prevalence, or broad originality. A useful result may be that certain cross-document correction cases change decisions while straightforward exact-partition cases do not. An equally useful result may be that a strong registry is sufficient for most cases.
+Six studies calibrate workload, gold-reference feasibility, public-evidence coverage, and recurring automation targets. They cannot establish general effectiveness, prevalence, clinical validity, or broad originality. A useful result may be that version/split resolution is repeatedly difficult and worth automating; another may be that most cases are simple enough for rules; another may be that the chosen issue cannot support artifact-grounded gold evaluation at all. Each outcome directly informs whether MedDataTrace should grow, simplify, or pivot.
 
 \appendix
 \section{Canonical assessment record example}
@@ -567,6 +649,7 @@ The following is fictional and asserts neither a real dependency nor a real data
   "scope_id": "example-dev-test-pair",
   "claim_target": "REPORTED_SETUP",
   "source_snapshot": "example-snapshot",
+  "benchmark_referenceability": "REFERENCE_UNSCORABLE",
   "inventory_basis": "DOCUMENTED_INPUTS",
   "inventory_complete_for_boundary": false,
   "unresolved_stages": ["pretraining data unspecified"],
@@ -613,18 +696,24 @@ S19 & Incompatible predictions for one atom. & Invalid scientific output; do not
 S20 & A supported symmetric historical witness is $(a,b)$, while the assessed pair contains $b$ in development and $a$ in test. & The reversed stored orientation $(b,a)$ preserves DM-H01 applicability; role reversal is not exclusion.\\
 S21 & One scope is CONFLICTING, another is UNKNOWN, and there is no conflict-free positive scope. & Evaluation-level summary is CONFLICTING, with UNKNOWN scope preserved.\\
 S22 & All relevant scopes are supported negative under a complete named boundary, using one-sided or mixed N1 witness blocking where sufficient. & Evaluation-level NOT\_APPLICABLE within that boundary; do not require unrelated complete manifests.\\
+S23 & A native configuration explicitly maps the named evaluation/result identifier to an exact version-pinned manifest, and the deterministic witness computation succeeds. & Complete linkage can support ARTIFACT\_GOLD; store the evaluation locator and linkage locator, not only the manifest hash.\\
+S24 & Two version-pinned manifests are available and both are plausible for the reported result, but no source-supported linkage identifies which one generated the evaluation. & REFERENCE\_UNSCORABLE, not gold UNKNOWN, even if each manifest can be checked deterministically.\\
+S25 & The uniquely linked admissible execution manifest explicitly lacks a contract-required field, and the frozen evidence contract states that neither polarity can be established without it. & Gold UNKNOWN is admissible because evidential incompleteness itself is reproducible.\\
+S26 & Two reproducible admissible artifacts support opposed conclusions for the same proposition, target, scope, and snapshot. & Gold CONFLICTING may be admitted; incomparable versions/targets would instead be unscorable.\\
+S27 & A method selects the wrong linked artifact but happens to output the same final applicability state as the reference. & Status match does not erase provenance error; evaluation-to-artifact linkage is scored separately.\\
+S28 & A method returns UNKNOWN for every gold case. & Sanity baseline: zero unsupported decisive outputs can coexist with poor decisive coverage and APPLIES recall; it cannot satisfy H1 by abstention alone.\\
 \bottomrule
 \end{longtable}
 
 \section{Conformance tests and implementation boundary}
-The source package includes a small Python reference implementation of the evidence-state/composition contract and synthetic unit tests. These tests validate bookkeeping assumptions only. They do not determine whether a real passage satisfies a scientific evidence obligation, validate medical evidence, or demonstrate usefulness.
+The source package includes small Python reference implementations of the evidence-state/composition contract and the benchmark reference-admission distinction (gold UNKNOWN versus reference-unscorable), with synthetic unit tests. These tests validate bookkeeping assumptions only. They do not determine whether a real passage satisfies a scientific evidence obligation, validate medical evidence, or demonstrate usefulness.
 
 \begin{lstlisting}
 python -m unittest discover -s reference_semantics -v
 latexmk -pdf -interaction=nonstopmode -halt-on-error meddatatrace_specification.tex
 \end{lstlisting}
 
-The project should add issue-specific DM-H01 tests after the historical witness set and identity mappings are independently pinned. Real reference answers remain withheld from evaluated methods.
+The project should add issue-specific DM-H01 tests after the historical witness set, artifact identities, and reference generator are reproducibly pinned. Artifact-grounded reference outputs remain withheld from evaluated methods. Cases that cannot support a reproducible reference derivation remain silver, reference-unscorable, or expert-required rather than being forced into gold; this is distinct from a reproducibly justified gold UNKNOWN.
 
 \clearpage
 \printbibliography[heading=bibintoc,title={References}]
