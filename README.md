@@ -38,19 +38,26 @@ See the specification for the research scope, evidence boundary, and roadmap.
 Prerequisites: Python 3.14 and [uv](https://docs.astral.sh/uv/). The checked-in project
 requires Python `>=3.14,<3.15`; CI installs the managed Python version and uses uv 0.12.13.
 
-```bash
-make setup
-make check
-make format
+From the repository root, these commands work in PowerShell, Command Prompt, and Unix
+shells:
+
+```text
+uv sync --locked
+uv run --locked python scripts/tasks.py check
+uv run --locked python scripts/tasks.py format
 ```
 
-`make check` runs Ruff, the 24 synthetic unittest methods, and JSON syntax checks for all
-five supplied pilot artifacts. It does not validate a scientific schema.
+`scripts/tasks.py` is the portable task entry point. On Unix, the Makefile remains an
+optional convenience wrapper (`make setup`, `make check`, `make format`, `make spec`).
+
+The check task runs Ruff, the 24 synthetic unittest methods, and JSON syntax checks for
+all five supplied pilot artifacts. It does not validate a scientific schema.
 
 ## Building the specification
 
-`make spec` runs the documented native command and writes
-`research/specs/meddatatrace_specification.pdf`. Native prerequisites are `latexmk`,
+`uv run --locked python scripts/tasks.py spec` runs the documented native command and
+writes `research/specs/meddatatrace_specification.pdf`. On Unix, `make spec` is an
+optional alias. Native prerequisites are `latexmk`,
 `biber`, and the TeX packages used by the preamble: `fontenc`, `inputenc`, `lmodern`,
 `geometry`, `microtype`, `setspace`, `xcolor`, `graphicx`, `booktabs`, `tabularx`,
 `longtable`, `array`, `amsmath`, `amssymb`, `enumitem`, `titlesec`, `fancyhdr`,
