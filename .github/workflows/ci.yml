@@ -31,9 +31,9 @@ jobs:
       - name: Install Python
         run: uv python install 3.14
       - name: Set up locked environment
-        run: make setup
+        run: uv sync --locked
       - name: Run checks
-        run: make check
+        run: uv run --locked python scripts/tasks.py check
 
   specification:
     name: Specification
@@ -55,7 +55,7 @@ jobs:
             texlive-pictures \
             lmodern
       - name: Build specification
-        run: make spec
+        run: python scripts/tasks.py spec
       - name: Upload specification PDF
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

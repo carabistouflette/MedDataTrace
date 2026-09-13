@@ -11,13 +11,16 @@ appropriate, and within the boundary described by the authoritative specificatio
 4. Review staged paths for secrets, restricted source material, patient data, populated
    held-out answers, and unsupported claims.
 
-```bash
-make setup
-make check
+```text
+uv sync --locked
+uv run --locked python scripts/tasks.py check
 ```
 
-Use `make format` for the repository's Ruff formatting and import-order fixes. When native
-TeX prerequisites are installed, run `make spec` and inspect the generated PDF. Without
+`scripts/tasks.py` is the cross-platform task entry point and works in PowerShell,
+Command Prompt, and Unix shells. On Unix, `make setup`, `make check`, `make format`, and
+`make spec` remain optional convenience aliases. Use the task runner's `format` task for
+Ruff formatting and import-order fixes. When native TeX prerequisites are installed,
+run `uv run --locked python scripts/tasks.py spec` and inspect the generated PDF. Without
 them, the GitHub Actions `Specification` job is the supported build route.
 
 ## Research boundaries
