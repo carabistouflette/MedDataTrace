@@ -1,13 +1,16 @@
 """Contract conformance on synthetic records; not real-world validation."""
 
+from __future__ import annotations
+
 import unittest
 from dataclasses import replace
 from itertools import product
+from typing import Any, cast
 
-from semantics import ClaimTarget, ScopeAssessment, State, evidence_state, summarize
+from semantics import ClaimTarget, ScopeAssessment, State, Summary, evidence_state, summarize
 
 
-def make(state: State, scope: str = "scope-1", corrected: bool = False) -> ScopeAssessment:
+def make(state: State, scope: str = "scope-1", *, corrected: bool = False) -> ScopeAssessment:
     return ScopeAssessment(
         evaluation_id="synthetic-eval",
         issue_id="synthetic-issue",
@@ -25,12 +28,12 @@ def make(state: State, scope: str = "scope-1", corrected: bool = False) -> Scope
     )
 
 
-def summary(*records, complete=True):
+def summary(*records: ScopeAssessment, complete: bool = True) -> Summary:
     return summarize(records, inventory_complete=complete, boundary_label="documented inputs only")
 
 
 class ContractTests(unittest.TestCase):
-    def test_truth_table(self):
+    def test_truth_table(self) -> None:
         expected = (
             (False, False, State.UNKNOWN),
             (True, False, State.APPLIES),
@@ -41,7 +44,7 @@ class ContractTests(unittest.TestCase):
             with self.subTest(p=p, n=n):
                 self.assertIs(evidence_state(p, n), state)
 
-    def test_all_two_scope_compositions(self):
+    def test_all_two_scope_compositions(self) -> None:
         # Explicit expected tables independent of the implementation branches.
         # Order: UNKNOWN, APPLIES, NOT_APPLICABLE, CONFLICTING.
         U, A, N, C = State.UNKNOWN, State.APPLIES, State.NOT_APPLICABLE, State.CONFLICTING
@@ -54,107 +57,109 @@ class ContractTests(unittest.TestCase):
                 result = summary(make(order[i], "a"), make(order[j], "b"), complete=complete)
                 self.assertIs(result.state, table[i][j])
 
-    def test_unknown_is_not_negative(self):
+    def test_unknown_is_not_negative(self) -> None:
         self.assertIs(make(State.UNKNOWN).state, State.UNKNOWN)
 
-    def test_mitigation_is_reason_for_negative(self):
+    def test_mitigation_is_reason_for_negative(self) -> None:
         r = make(State.NOT_APPLICABLE, corrected=True)
         self.assertIs(r.state, State.NOT_APPLICABLE)
         self.assertEqual(r.display, "MITIGATED")
 
-    def test_incomplete_correction_evidence_is_not_complete(self):
+    def test_incomplete_correction_evidence_is_not_complete(self) -> None:
         with self.assertRaises(ValueError):
             replace(
                 make(State.UNKNOWN), correction_complete=True, correction_certificate_ids=("c",)
             )
 
-    def test_missing_correction_certificate_rejected(self):
+    def test_missing_correction_certificate_rejected(self) -> None:
         with self.assertRaises(ValueError):
             replace(make(State.NOT_APPLICABLE), correction_complete=True)
 
-    def test_conflicting_correction_not_displayed_mitigated(self):
+    def test_conflicting_correction_not_displayed_mitigated(self) -> None:
         self.assertEqual(make(State.CONFLICTING, corrected=True).display, "CONFLICTING")
 
-    def test_corrected_plus_unknown_is_unknown(self):
-        out = summary(make(State.NOT_APPLICABLE, "a", True), make(State.UNKNOWN, "b"))
+    def test_corrected_plus_unknown_is_unknown(self) -> None:
+        out = summary(make(State.NOT_APPLICABLE, "a", corrected=True), make(State.UNKNOWN, "b"))
         self.assertIs(out.state, State.UNKNOWN)
         self.assertEqual(out.mitigated_scope_ids, ("a",))
 
-    def test_clean_positive_is_localized(self):
+    def test_clean_positive_is_localized(self) -> None:
         out = summary(make(State.APPLIES, "a"), make(State.CONFLICTING, "b"), complete=False)
         self.assertIs(out.state, State.APPLIES)
         self.assertEqual(out.applicable_scope_ids, ("a",))
         self.assertEqual(out.conflicting_scope_ids, ("b",))
         self.assertFalse(out.inventory_complete_for_boundary)
 
-    def test_contested_witness_is_not_clean_positive(self):
+    def test_contested_witness_is_not_clean_positive(self) -> None:
         out = summary(make(State.CONFLICTING, "a"), make(State.UNKNOWN, "b"))
         self.assertIs(out.state, State.CONFLICTING)
         self.assertFalse(out.applicable_scope_ids)
 
-    def test_all_negative_in_incomplete_inventory_unknown(self):
+    def test_all_negative_in_incomplete_inventory_unknown(self) -> None:
         self.assertIs(summary(make(State.NOT_APPLICABLE), complete=False).state, State.UNKNOWN)
 
-    def test_all_negative_in_complete_boundary_negative(self):
-        out = summary(make(State.NOT_APPLICABLE, "a"), make(State.NOT_APPLICABLE, "b", True))
+    def test_all_negative_in_complete_boundary_negative(self) -> None:
+        out = summary(
+            make(State.NOT_APPLICABLE, "a"), make(State.NOT_APPLICABLE, "b", corrected=True)
+        )
         self.assertIs(out.state, State.NOT_APPLICABLE)
         self.assertEqual(out.mitigated_scope_ids, ("b",))
         self.assertEqual(len(out.all_scopes), 2)
 
-    def test_empty_query_never_negative(self):
+    def test_empty_query_never_negative(self) -> None:
         for complete in (True, False):
             self.assertIs(summary(complete=complete).state, State.UNKNOWN)
 
-    def test_mixed_snapshots_rejected(self):
+    def test_mixed_snapshots_rejected(self) -> None:
         with self.assertRaises(ValueError):
             summary(
                 make(State.UNKNOWN, "a"), replace(make(State.UNKNOWN, "b"), snapshot_id="other")
             )
 
-    def test_mixed_issue_rejected(self):
+    def test_mixed_issue_rejected(self) -> None:
         with self.assertRaises(ValueError):
             summary(make(State.UNKNOWN, "a"), replace(make(State.UNKNOWN, "b"), issue_id="other"))
 
-    def test_mixed_evaluation_rejected(self):
+    def test_mixed_evaluation_rejected(self) -> None:
         with self.assertRaises(ValueError):
             summary(
                 make(State.UNKNOWN, "a"), replace(make(State.UNKNOWN, "b"), evaluation_id="other")
             )
 
-    def test_mixed_claim_target_rejected(self):
+    def test_mixed_claim_target_rejected(self) -> None:
         with self.assertRaises(ValueError):
             summary(
                 make(State.UNKNOWN, "a"),
                 replace(make(State.UNKNOWN, "b"), claim_target=ClaimTarget.DOCUMENTED_PROCEDURE),
             )
 
-    def test_duplicate_scopes_rejected(self):
+    def test_duplicate_scopes_rejected(self) -> None:
         with self.assertRaises(ValueError):
             summary(make(State.APPLIES), make(State.NOT_APPLICABLE))
 
-    def test_empty_boundary_rejected(self):
+    def test_empty_boundary_rejected(self) -> None:
         with self.assertRaises(ValueError):
             summarize([], inventory_complete=True, boundary_label="")
 
-    def test_nonboolean_support_rejected(self):
+    def test_nonboolean_support_rejected(self) -> None:
         with self.assertRaises(TypeError):
-            evidence_state(0.95, False)
+            evidence_state(cast(Any, 0.95), False)
 
-    def test_blank_identifier_rejected(self):
+    def test_blank_identifier_rejected(self) -> None:
         with self.assertRaises(ValueError):
             replace(make(State.UNKNOWN), scope_id=" ")
 
-    def test_duplicate_certificates_rejected(self):
+    def test_duplicate_certificates_rejected(self) -> None:
         with self.assertRaises(ValueError):
             replace(make(State.UNKNOWN), presence_certificate_ids=("p", "p"))
 
-    def test_no_empty_certificate_ids(self):
+    def test_no_empty_certificate_ids(self) -> None:
         with self.assertRaises(ValueError):
             replace(make(State.UNKNOWN), absence_certificate_ids=("",))
 
-    def test_no_untyped_target(self):
+    def test_no_untyped_target(self) -> None:
         with self.assertRaises(TypeError):
-            replace(make(State.UNKNOWN), claim_target="REPORTED_SETUP")
+            replace(make(State.UNKNOWN), claim_target=cast(Any, "REPORTED_SETUP"))
 
 
 if __name__ == "__main__":

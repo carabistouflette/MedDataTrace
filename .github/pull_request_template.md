@@ -5,7 +5,8 @@
 
 ## Proof
 
-- What checks or reproducible commands were run?
+- [ ] `uv run --locked python scripts/tasks.py check` passes.
+- [ ] `git diff --check` passes.
 - What remains intentionally unverified?
 
 ## Publication safety

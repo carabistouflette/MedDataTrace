@@ -25,7 +25,7 @@ L2,E,ignored
 
 
 class GeneratorTests(unittest.TestCase):
-    def _artifacts(self, split: str = _SPLIT, identity: str = _IDENTITY):
+    def _artifacts(self, split: str = _SPLIT, identity: str = _IDENTITY) -> tuple[Path, Path]:
         directory = tempfile.TemporaryDirectory()
         root = Path(directory.name)
         split_path = root / "split.csv"
@@ -35,7 +35,7 @@ class GeneratorTests(unittest.TestCase):
         self.addCleanup(directory.cleanup)
         return split_path, identity_path
 
-    def test_computes_symmetric_direct_witnesses(self):
+    def test_computes_symmetric_direct_witnesses(self) -> None:
         split_path, identity_path = self._artifacts()
 
         witnesses = build_witnesses(split_path, identity_path)
@@ -59,7 +59,7 @@ class GeneratorTests(unittest.TestCase):
             },
         )
 
-    def test_order_of_source_rows_does_not_change_registry(self):
+    def test_order_of_source_rows_does_not_change_registry(self) -> None:
         split_path, identity_path = self._artifacts()
         split_lines = _SPLIT.rstrip().splitlines()
         identity_lines = _IDENTITY.rstrip().splitlines()
@@ -78,7 +78,7 @@ class GeneratorTests(unittest.TestCase):
             witness_registry_sha256(witnesses), witness_registry_sha256(witnesses[::-1])
         )
 
-    def test_missing_identity_and_duplicate_membership_are_rejected(self):
+    def test_missing_identity_and_duplicate_membership_are_rejected(self) -> None:
         split_path, identity_path = self._artifacts(
             identity=_IDENTITY.replace("L2,E,ignored\n", "")
         )
@@ -100,7 +100,7 @@ class GeneratorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             build_witnesses(ragged_split_path, ragged_identity_path)
 
-    def test_development_and_test_partitions_must_be_disjoint(self):
+    def test_development_and_test_partitions_must_be_disjoint(self) -> None:
         split_path, identity_path = self._artifacts()
         with self.assertRaises(ValueError):
             compute_reference(

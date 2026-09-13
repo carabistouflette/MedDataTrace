@@ -12,9 +12,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Sequence
 
 GENERATOR_VERSION = "DM-H01-reference-generator-0.1.0"
 _ALLOWED_PARTITIONS = frozenset(("train", "val", "test"))
@@ -100,11 +100,11 @@ def read_memberships(path_value: str | Path) -> tuple[Membership, ...]:
     memberships: dict[str, Membership] = {}
     seen_indices: set[tuple[str, int]] = set()
 
-    for line_number, (partition, index_text, image_id) in _required_columns(
+    for line_number, (partition_value, index_text, image_id_value) in _required_columns(
         path, ("split", "index", "image_id")
     ):
-        partition = _exact_nonempty(partition, "split", line_number, path)
-        image_id = _exact_nonempty(image_id, "image_id", line_number, path)
+        partition = _exact_nonempty(partition_value, "split", line_number, path)
+        image_id = _exact_nonempty(image_id_value, "image_id", line_number, path)
         if partition not in _ALLOWED_PARTITIONS:
             raise ValueError(f"unsupported partition {partition!r}: {path}")
         try:
@@ -135,11 +135,11 @@ def read_recorded_identities(
     path = _path(path_value)
     identities: dict[str, str] = {}
 
-    for line_number, (recorded_identity, image_id) in _required_columns(
+    for line_number, (recorded_identity_value, image_id_value) in _required_columns(
         path, ("lesion_id", "image_id")
     ):
-        recorded_identity = _exact_nonempty(recorded_identity, "lesion_id", line_number, path)
-        image_id = _exact_nonempty(image_id, "image_id", line_number, path)
+        recorded_identity = _exact_nonempty(recorded_identity_value, "lesion_id", line_number, path)
+        image_id = _exact_nonempty(image_id_value, "image_id", line_number, path)
         if image_id in identities:
             raise ValueError(f"duplicate image_id {image_id!r}: {path}")
         identities[image_id] = recorded_identity

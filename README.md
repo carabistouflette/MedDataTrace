@@ -28,12 +28,15 @@ See the specification for the research scope, evidence boundary, and roadmap.
 
 - `research/specs/`: authoritative TeX specification, bibliography, synthetic semantics,
   deterministic DM-H01 reference generation, tests, and pilot templates.
-- `pyproject.toml` and `uv.lock`: non-package development environment and locked Ruff
+- `pyproject.toml` and `uv.lock`: non-package development environment and locked Ruff/mypy
   tooling.
 - `Makefile`: reproducible setup, checks, formatting, and specification build commands.
 - `.github/`: CI, dependency update, contribution, and security configuration.
 
 ## Development
+
+Read [`CONTRIBUTING.md`](CONTRIBUTING.md) for the Python style, typing, testing, data-boundary,
+and pull-request contract.
 
 Prerequisites: Python 3.14 and [uv](https://docs.astral.sh/uv/). The checked-in project
 requires Python `>=3.14,<3.15`; CI installs the managed Python version and uses uv 0.12.13.
@@ -50,9 +53,9 @@ uv run --locked python scripts/tasks.py format
 `scripts/tasks.py` is the portable task entry point. On Unix, the Makefile remains an
 optional convenience wrapper (`make setup`, `make check`, `make format`, `make spec`).
 
-The check task runs Ruff, synthetic semantics, reference-admission, and DM-H01 generator
-unittests, plus JSON syntax checks for all six supplied pilot artifacts. It does not
-validate a scientific schema.
+The check task runs Ruff lint and formatting checks, strict mypy, synthetic semantics,
+reference-admission and DM-H01 generator unittests, plus JSON syntax checks for all six supplied
+pilot artifacts. It does not validate a scientific schema.
 
 ## Building the specification
 
