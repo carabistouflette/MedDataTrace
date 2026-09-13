@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   checks:
-    name: Python quality
+    name: Checks
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
